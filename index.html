@@ -1,0 +1,2441 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Alef Studio — Editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=DM+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0c0c0a;
+      --snow: #f8f6f1;
+      --ash: #7a7670;
+      --fire: #c4622d;
+      --olive: #181810;
+      --cream: #f2ede4;
+      --sand: #ede6d8;
+      --safe-t: env(safe-area-inset-top, 0px);
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --px: 56px;
+      /* Unterkante fixer Header (Logo-Zeile + Puffer) */
+      --hdr-stack: calc(var(--safe-t) + 82px);
+      /* Erste Inhaltszeile: klar unter dem Header (Bento / kein Überdecken) */
+      --scr-pad-t: calc(var(--hdr-stack) + 16px);
+      --dot-off: rgba(248, 246, 241, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --px: 28px;
+      }
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      -webkit-font-smoothing: antialiased;
+      background: var(--ink);
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ——— Stage ——— */
+    .stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .scr {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .scr.on,
+    .scr.leaving {
+      display: flex;
+    }
+
+    .scr.on {
+      z-index: 2;
+    }
+
+    .scr.leaving {
+      z-index: 3;
+    }
+
+    .scr.entering {
+      z-index: 1;
+    }
+
+    .scr.entering.on {
+      z-index: 2;
+    }
+
+    .scr.leaving {
+      animation: scrOut 0.4s cubic-bezier(0.4, 0, 1, 1) both;
+    }
+
+    .scr.on.entering {
+      animation: scrIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes scrIn {
+      from {
+        opacity: 0;
+        transform: translateY(52px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scrOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-32px);
+      }
+    }
+
+    .scr.on .up {
+      animation: up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .scr.on .up:nth-child(1) {
+      animation-delay: 0.08s;
+    }
+
+    .scr.on .up:nth-child(2) {
+      animation-delay: 0.18s;
+    }
+
+    .scr.on .up:nth-child(3) {
+      animation-delay: 0.28s;
+    }
+
+    .scr.on .up:nth-child(4) {
+      animation-delay: 0.38s;
+    }
+
+    .scr.on .up:nth-child(5) {
+      animation-delay: 0.48s;
+    }
+
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scr.on .fade {
+      animation: fade 1s ease both;
+    }
+
+    .scr.on .fade:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+
+    .scr.on .fade:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Tap zones */
+    .tap {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 50;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tap-l {
+      left: 0;
+    }
+
+    .tap-r {
+      right: 0;
+    }
+
+    /* Screen backgrounds */
+    .bg-ink {
+      background: var(--ink);
+    }
+
+    .bg-snow {
+      background: var(--snow);
+    }
+
+    .bg-olive {
+      background: var(--olive);
+    }
+
+    .bg-cream {
+      background: var(--cream);
+    }
+
+    .bg-sand {
+      background: var(--sand);
+    }
+
+    .bg-fire {
+      background: var(--fire);
+    }
+
+    /* ——— Header ——— */
+    .hdr {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: calc(var(--safe-t) + 26px) var(--px) 20px;
+      transition: color 0.5s;
+      pointer-events: none;
+    }
+
+    .hdr a,
+    .hdr button {
+      pointer-events: auto;
+    }
+
+    .hdr-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .hdr-name {
+      font-family: "DM Sans", sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      transition: color 0.4s;
+    }
+
+    .hdr-nav {
+      display: flex;
+      gap: 32px;
+    }
+
+    .hdr-nav a {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .hdr[data-tone="snow"] .hdr-name,
+    .hdr[data-tone="snow"] .hdr-nav a {
+      color: rgba(248, 246, 241, 0.35);
+    }
+
+    .hdr[data-tone="snow"] .hdr-nav a:hover {
+      color: var(--snow);
+    }
+
+    .hdr[data-tone="ink"] .hdr-name,
+    .hdr[data-tone="ink"] .hdr-nav a {
+      color: rgba(12, 12, 10, 0.3);
+    }
+
+    .hdr[data-tone="ink"] .hdr-nav a:hover {
+      color: var(--ink);
+    }
+
+    .hdr[data-tone="fire"] .hdr-name,
+    .hdr[data-tone="fire"] .hdr-nav a {
+      color: rgba(248, 246, 241, 0.45);
+    }
+
+    .hdr[data-tone="fire"] .hdr-nav a:hover {
+      color: var(--snow);
+    }
+
+    @media (max-width: 768px) {
+      .hdr-nav {
+        display: none;
+      }
+    }
+
+    /* ——— Typography utilities ——— */
+    .eyebrow {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--fire);
+      margin: 0;
+    }
+
+    .rule {
+      height: 1px;
+      background: var(--fire);
+      opacity: 0.85;
+      border: 0;
+      margin: 0;
+    }
+
+    .deco-num {
+      position: absolute;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 300;
+      line-height: 0.85;
+      color: var(--snow);
+      opacity: 0.045;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .deco-letter {
+      position: absolute;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 300;
+      line-height: 0.8;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .bg-snow .deco-letter,
+    .bg-cream .deco-letter,
+    .bg-sand .deco-letter {
+      color: var(--ink);
+      opacity: 0.04;
+    }
+
+    .bg-ink .deco-letter,
+    .bg-olive .deco-letter {
+      color: var(--snow);
+      opacity: 0.05;
+    }
+
+    .rail-v {
+      position: absolute;
+      font-family: "DM Mono", monospace;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    /* ——— Progress dots ——— */
+    .dots {
+      position: fixed;
+      bottom: calc(28px + var(--safe-b));
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 7px;
+      z-index: 150;
+    }
+
+    .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--dot-off);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      padding: 0;
+      border: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dot.on {
+      background: var(--fire);
+      transform: scale(1.6);
+    }
+
+    /* ═══ Screen 1 — Hero (data-tone snow / bg-ink) ═══ */
+    .s1 {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding-top: var(--scr-pad-t);
+    }
+
+    .s1-deco {
+      position: absolute;
+      right: var(--px);
+      top: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(220px, 38vw, 460px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.08em;
+      color: rgba(248, 246, 241, 0.025);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .s1-vrail {
+      position: absolute;
+      left: 20px;
+      bottom: 120px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: rgba(248, 246, 241, 0.15);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .s1-content {
+      position: relative;
+      z-index: 55;
+      margin-top: auto;
+      padding: 0 var(--px) calc(var(--safe-b) + 68px);
+    }
+
+    .s1-rule {
+      display: block;
+      width: 32px;
+      height: 1px;
+      margin: 0 0 20px;
+      padding: 0;
+      border: 0;
+      background: #c4622d;
+    }
+
+    .s1-eyebrow {
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: none;
+      color: rgba(248, 246, 241, 0.28);
+      margin: 0 0 16px;
+    }
+
+    .s1-hero {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(80px, 13vw, 140px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.05em;
+      color: var(--snow);
+    }
+
+    .s1-subrow {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 0.5px solid rgba(248, 246, 241, 0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .s1-hook {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.55;
+      color: rgba(248, 246, 241, 0.4);
+      max-width: min(100%, 36ch);
+    }
+
+    .s1-worklink {
+      font-family: "DM Sans", sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--snow);
+      text-decoration: none;
+      border-bottom: 0.5px solid rgba(248, 246, 241, 0.3);
+      padding-bottom: 3px;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .s1-worklink:hover {
+      color: rgba(248, 246, 241, 0.85);
+    }
+
+    /* ═══ Screen 2 — Warum (data-tone ink / bg-cream) ═══ */
+    .s2 {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding-top: var(--scr-pad-t);
+    }
+
+    .s2-deco {
+      position: absolute;
+      bottom: -0.06em;
+      right: -0.02em;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(140px, 22vw, 280px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: rgba(12, 12, 10, 0.04);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .s2-num {
+      position: absolute;
+      top: 12px;
+      right: var(--px);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: rgba(12, 12, 10, 0.2);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .s2-aside {
+      position: absolute;
+      right: var(--px);
+      top: max(50%, calc(var(--hdr-stack) + 140px));
+      transform: translateY(-50%);
+      max-width: 260px;
+      border-left: 1px solid rgba(12, 12, 10, 0.15);
+      padding-left: 20px;
+      z-index: 4;
+    }
+
+    .s2-aside-label {
+      margin: 0 0 12px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: rgba(12, 12, 10, 0.3);
+    }
+
+    .s2-aside-text {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(12, 12, 10, 0.5);
+    }
+
+    .s2-content {
+      position: relative;
+      z-index: 55;
+      margin-top: auto;
+      padding: 0 var(--px) calc(var(--safe-b) + 56px);
+      max-width: 100%;
+    }
+
+    .s2-overline {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .s2-overline-line {
+      flex-shrink: 0;
+      width: 32px;
+      height: 1px;
+      background: #c4622d;
+    }
+
+    .s2-overline-text {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: #c4622d;
+    }
+
+    .s2-headline {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(52px, 8.5vw, 104px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      max-width: 22ch;
+    }
+
+    .s2-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .s2-tags span {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: none;
+      border: 0.5px solid rgba(12, 12, 10, 0.2);
+      border-radius: 2px;
+      padding: 7px 14px;
+      color: rgba(12, 12, 10, 0.4);
+    }
+
+    /* ═══ Screen 3 — Alef Studio (data-tone snow / bg-ink) ═══ */
+    .s3 {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding-top: var(--scr-pad-t);
+    }
+
+    .s3-deco {
+      position: absolute;
+      top: 0;
+      right: var(--px);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(100px, 18vw, 200px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      color: rgba(248, 246, 241, 0.04);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .s3-content {
+      position: relative;
+      z-index: 55;
+      margin-top: auto;
+      width: 100%;
+      padding: 0 var(--px) calc(var(--safe-b) + 56px);
+    }
+
+    .s3-overline {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .s3-overline-line {
+      flex-shrink: 0;
+      width: 32px;
+      height: 1px;
+      background: #c4622d;
+    }
+
+    .s3-overline-text {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: #c4622d;
+    }
+
+    .s3-head {
+      margin: 0 0 8px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(44px, 7.5vw, 88px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--snow);
+      max-width: 18ch;
+    }
+
+    .s3-rows {
+      margin-top: 22px;
+    }
+
+    .s3-row {
+      display: grid;
+      grid-template-columns: 2.25em minmax(0, 1fr);
+      column-gap: 20px;
+      align-items: baseline;
+      padding: 12px 0;
+      border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .s3-row-no {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: rgba(248, 246, 241, 0.32);
+    }
+
+    .s3-row-t {
+      font-family: "DM Sans", sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.35;
+      color: rgba(248, 246, 241, 0.52);
+    }
+
+    .s3-foot {
+      margin: 28px 0 0;
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      line-height: 1.65;
+      text-transform: uppercase;
+      color: #c4622d;
+    }
+
+    /* ═══ Screen 4 — Denkweise (data-tone ink / bg-sand) ═══ */
+    .s4 {
+      flex: 1;
+      position: relative;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding-top: var(--scr-pad-t);
+    }
+
+    .s4-deco {
+      position: absolute;
+      top: 0;
+      left: calc(var(--px) - 0.12em);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(140px, 28vw, 320px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: rgba(12, 12, 10, 0.04);
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    .s4-content {
+      position: relative;
+      z-index: 55;
+      margin-top: auto;
+      width: 100%;
+      padding: 0 var(--px) calc(var(--safe-b) + 56px);
+    }
+
+    .s4-overline {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .s4-overline-line {
+      flex-shrink: 0;
+      width: 32px;
+      height: 1px;
+      background: #c4622d;
+    }
+
+    .s4-overline-text {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: #c4622d;
+    }
+
+    .s4-head {
+      margin: 0 0 20px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(40px, 6.5vw, 76px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      max-width: 16ch;
+    }
+
+    .s4-pull {
+      margin: 0 0 24px;
+      padding: 0;
+      border: none;
+      quotes: none;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: rgba(12, 12, 10, 0.4);
+      max-width: 20ch;
+    }
+
+    .s4-body {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(12, 12, 10, 0.5);
+      max-width: 32ch;
+    }
+
+    /* ═══ Screen 5 — Locl (data-tone snow / bg-ink) ═══ */
+    .s5 {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 64px);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .s5-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .s5-ring--1 {
+      width: min(70vw, 480px);
+      height: min(70vw, 480px);
+      border: 0.5px solid rgba(248, 246, 241, 0.04);
+    }
+
+    .s5-ring--2 {
+      width: min(90vw, 680px);
+      height: min(90vw, 680px);
+      border: 0.5px solid rgba(248, 246, 241, 0.025);
+    }
+
+    .s5-top {
+      position: relative;
+      z-index: 1;
+      max-width: 100%;
+    }
+
+    .s5-eyebrow {
+      margin: 0 0 20px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c4622d;
+    }
+
+    .s5-head {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(44px, 7.5vw, 96px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 0.97;
+      letter-spacing: -0.04em;
+      color: var(--snow);
+    }
+
+    .s5-head em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .s5-device {
+      position: relative;
+      z-index: 1;
+      width: auto;
+      height: clamp(200px, 32vh, 320px);
+      aspect-ratio: 9 / 19;
+      border-radius: 28px;
+      background: rgba(248, 246, 241, 0.04);
+      border: 0.5px solid rgba(248, 246, 241, 0.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: rgba(248, 246, 241, 0.18);
+      flex-shrink: 0;
+    }
+
+    .s5-bottom {
+      position: relative;
+      z-index: 55;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .s5-body {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(248, 246, 241, 0.4);
+      text-align: left;
+      max-width: 24ch;
+    }
+
+    .s5-cta {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--snow);
+      text-decoration: none;
+      border-bottom: 0.5px solid rgba(248, 246, 241, 0.3);
+      padding-bottom: 3px;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .s5-cta:hover {
+      color: rgba(248, 246, 241, 0.85);
+    }
+
+    /* ═══ Screen 6 — FlowLeads (data-tone ink / bg-cream) ═══ */
+    .s6 {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 60px);
+      overflow: hidden;
+    }
+
+    .s6-accent {
+      position: absolute;
+      left: 0;
+      top: 25%;
+      bottom: 25%;
+      width: 3px;
+      display: block;
+      background: #c4622d;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .s6-overline {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .s6-overline-line {
+      flex-shrink: 0;
+      width: 32px;
+      height: 1px;
+      background: #c4622d;
+    }
+
+    .s6-overline-text {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: #c4622d;
+    }
+
+    .s6-main {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: end;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .s6-head {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(32px, 5.2vw, 68px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      max-width: 15ch;
+    }
+
+    .s6-stat {
+      text-align: right;
+      justify-self: end;
+      max-width: 100%;
+    }
+
+    .s6-stat-label {
+      margin: 0 0 8px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(12, 12, 10, 0.35);
+    }
+
+    .s6-stat-num {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(80px, 13vw, 160px);
+      font-weight: 700;
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: #c4622d;
+    }
+
+    .s6-stat-sub {
+      margin: 8px 0 0;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(12, 12, 10, 0.3);
+    }
+
+    .s6-built {
+      position: relative;
+      z-index: 1;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 0.5px solid rgba(12, 12, 10, 0.08);
+    }
+
+    .s6-built-title {
+      margin: 0 0 16px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: rgba(12, 12, 10, 0.38);
+    }
+
+    .s6-built-row {
+      border-top: 0.5px solid rgba(12, 12, 10, 0.08);
+      padding: 12px 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.45;
+      color: rgba(12, 12, 10, 0.55);
+    }
+
+    .s6-cta {
+      display: inline-block;
+      margin-top: 24px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 0.5px solid rgba(12, 12, 10, 0.3);
+      padding-bottom: 3px;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .s6-cta:hover {
+      color: rgba(12, 12, 10, 0.75);
+      border-bottom-color: rgba(12, 12, 10, 0.45);
+    }
+
+    /* ═══ Screen 7 — Locl (data-tone snow / bg-ink) ═══ */
+    .s7 {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 64px);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .s7-top {
+      position: relative;
+      z-index: 1;
+      max-width: 100%;
+    }
+
+    .s7-overline {
+      margin: 0 0 20px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: #c4622d;
+    }
+
+    .s7-head {
+      margin: 0 auto;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(40px, 6.5vw, 84px);
+      font-weight: 700;
+      font-style: normal;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--snow);
+      max-width: 14ch;
+    }
+
+    .s7-stack {
+      position: relative;
+      z-index: 55;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      width: 100%;
+      max-width: min(100%, 400px);
+    }
+
+    .s7-body {
+      margin: 0;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(22px, 3.2vw, 32px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: rgba(248, 246, 241, 0.4);
+      text-align: center;
+      max-width: 22ch;
+    }
+
+    .s7-built {
+      width: 100%;
+      text-align: left;
+    }
+
+    .s7-built-title {
+      margin: 0 0 12px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: rgba(248, 246, 241, 0.32);
+    }
+
+    .s7-built-row {
+      border-top: 0.5px solid rgba(248, 246, 241, 0.06);
+      padding: 11px 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.45;
+      color: rgba(248, 246, 241, 0.48);
+    }
+
+    .s7-cta {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: var(--snow);
+      text-decoration: none;
+      border-bottom: 0.5px solid rgba(248, 246, 241, 0.3);
+      padding-bottom: 3px;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .s7-cta:hover {
+      color: rgba(248, 246, 241, 0.85);
+      border-bottom-color: rgba(248, 246, 241, 0.5);
+    }
+
+    /* ═══ Screen 8 — Prozess (data-tone ink / bg-snow) ═══ */
+    .s8 {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 60px);
+      overflow: hidden;
+    }
+
+    .s8-deco {
+      position: absolute;
+      top: 0;
+      right: var(--px);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(100px, 18vw, 200px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.06em;
+      color: rgba(12, 12, 10, 0.05);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 0;
+    }
+
+    .s8-content {
+      position: relative;
+      z-index: 55;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .s8-overline {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .s8-overline-line {
+      flex-shrink: 0;
+      width: 32px;
+      height: 1px;
+      background: #c4622d;
+    }
+
+    .s8-overline-text {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: #c4622d;
+    }
+
+    .s8-headline {
+      margin: 0 0 8px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(44px, 7vw, 88px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      max-width: 14ch;
+    }
+
+    .s8-rows {
+      flex: 1;
+      margin-top: 28px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .s8-row {
+      display: grid;
+      grid-template-columns: 2.25em minmax(0, 1fr);
+      column-gap: 20px;
+      align-items: start;
+      padding: 20px 0;
+      border-top: 0.5px solid rgba(12, 12, 10, 0.06);
+    }
+
+    .s8-num {
+      margin: 0.35em 0 0;
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: rgba(12, 12, 10, 0.2);
+    }
+
+    .s8-row-main {
+      min-width: 0;
+    }
+
+    .s8-title {
+      display: block;
+      margin: 0 0 10px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .s8-phase-body {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(12, 12, 10, 0.5);
+      max-width: 48ch;
+    }
+
+    /* ═══ Screen 9 — Für wen (data-tone ink / bg-sand) ═══ */
+    .s9fw {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 56px);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .s9fw-deco {
+      position: absolute;
+      top: 0;
+      left: calc(var(--px) - 0.06em);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(120px, 22vw, 260px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: rgba(12, 12, 10, 0.04);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 0;
+    }
+
+    .s9fw-main {
+      position: relative;
+      z-index: 55;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .s9fw-spacer {
+      flex: 1;
+      min-height: 16px;
+    }
+
+    .s9fw-top {
+      flex-shrink: 0;
+    }
+
+    .s9fw-overline {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .s9fw-overline-line {
+      flex-shrink: 0;
+      width: 32px;
+      height: 1px;
+      background: #c4622d;
+    }
+
+    .s9fw-overline-text {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: #c4622d;
+    }
+
+    .s9fw-headline {
+      margin: 0 0 36px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(36px, 5.8vw, 72px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      max-width: 18ch;
+    }
+
+    .s9fw-cols {
+      flex-shrink: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px 48px;
+      align-items: start;
+    }
+
+    .s9fw-col-title {
+      margin: 0 0 18px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: none;
+      color: rgba(12, 12, 10, 0.38);
+    }
+
+    .s9fw-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .s9fw-item {
+      position: relative;
+      margin: 0 0 16px;
+      padding-left: 14px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.55;
+      color: rgba(12, 12, 10, 0.72);
+    }
+
+    .s9fw-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .s9fw-item--yes::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.32em;
+      bottom: 0.32em;
+      width: 0.5px;
+      background: #c4622d;
+    }
+
+    .s9fw-item--no::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.32em;
+      bottom: 0.32em;
+      width: 0.5px;
+      background: rgba(12, 12, 10, 0.3);
+    }
+
+    /* ═══ Screen 10 — CTA (data-tone fire / bg-fire) — Klassen .s9-* ═══ */
+    .s9 {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 64px);
+      overflow: hidden;
+    }
+
+    .s9-deco {
+      position: absolute;
+      left: -0.06em;
+      bottom: -0.12em;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(240px, 38vw, 520px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.08em;
+      color: rgba(12, 12, 10, 0.1);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 0;
+    }
+
+    .s9-content {
+      position: relative;
+      z-index: 55;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .s9-overline {
+      margin: 0 0 18px;
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: none;
+      color: rgba(248, 246, 241, 0.45);
+    }
+
+    .s9-headline {
+      margin: 0 0 40px;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(72px, 12vw, 148px);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+      color: var(--snow);
+    }
+
+    .s9-headline em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .s9-rule {
+      width: 100%;
+      height: 0.5px;
+      margin: 0 0 24px;
+      border: 0;
+      padding: 0;
+      background: rgba(248, 246, 241, 0.2);
+    }
+
+    .s9-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .s9-copy {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(248, 246, 241, 0.6);
+      max-width: 30ch;
+    }
+
+    .s9-btn {
+      display: inline-block;
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--snow);
+      color: #c4622d;
+      border: none;
+      border-radius: 2px;
+      padding: 14px 24px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.2s ease;
+    }
+
+    .s9-btn:hover {
+      opacity: 0.9;
+    }
+
+    .s9-foot {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 0.5px solid rgba(248, 246, 241, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .s9-foot-brand {
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(248, 246, 241, 0.28);
+    }
+
+    .s9-foot-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .s9-foot-nav a {
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(248, 246, 241, 0.28);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .s9-foot-nav a:hover {
+      color: rgba(248, 246, 241, 0.55);
+    }
+
+    @media (max-width: 768px) {
+      .s1-vrail {
+        left: 12px;
+        bottom: 96px;
+        font-size: 9px;
+      }
+
+      .s2-aside {
+        position: static;
+        transform: none;
+        max-width: none;
+        border-left: none;
+        border-top: 1px solid rgba(12, 12, 10, 0.12);
+        padding-left: 0;
+        padding-top: 20px;
+        margin-bottom: 28px;
+        order: -1;
+      }
+
+      .s2-num {
+        top: 8px;
+      }
+
+      .s2-content {
+        padding-top: 8px;
+      }
+
+      .s3-deco {
+        top: 0;
+        font-size: clamp(72px, 20vw, 140px);
+      }
+
+      .s3-head {
+        max-width: none;
+      }
+
+      .s3-row {
+        column-gap: 14px;
+        padding: 10px 0;
+      }
+
+      .s3-row-t {
+        font-size: 14px;
+      }
+
+      .s4-deco {
+        top: 0;
+        font-size: clamp(100px, 36vw, 220px);
+      }
+
+      .s4-head {
+        max-width: none;
+      }
+
+      .s4-pull {
+        max-width: none;
+      }
+
+      .s5-bottom {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .s6-main {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        align-items: flex-start;
+      }
+
+      .s6-stat {
+        text-align: left;
+        justify-self: start;
+      }
+
+      .s6-head {
+        max-width: none;
+      }
+
+      .s7-head {
+        font-size: clamp(32px, 8vw, 64px);
+        max-width: none;
+      }
+
+      .s8-headline {
+        max-width: none;
+      }
+
+      .s8-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .s8-num {
+        margin: 0 0 4px;
+      }
+
+      .s9fw-cols {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .s9fw-headline {
+        max-width: none;
+      }
+
+      .s9fw-deco {
+        font-size: clamp(88px, 28vw, 180px);
+      }
+
+      .s9-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <header class="hdr" id="hdr" data-tone="snow">
+      <a class="hdr-brand" href="#" onclick="return false">
+        <svg width="26" height="26" viewBox="0 0 26 26" id="hdr-svg" aria-hidden="true">
+          <rect id="ic-bg" width="26" height="26" rx="5" fill="#0c0c0a" />
+          <line id="ic-v" x1="13" y1="6" x2="13" y2="20" stroke="#f8f6f1" stroke-width="2" stroke-linecap="round" />
+          <line id="ic-d" x1="13" y1="6" x2="19" y2="12" stroke="#f8f6f1" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span class="hdr-name">Alef Studio</span>
+      </a>
+      <nav class="hdr-nav">
+        <a href="#" onclick="return false">Studio</a>
+        <a href="#" onclick="return false">Produkte</a>
+        <a href="#" onclick="return false">Kontakt</a>
+      </nav>
+    </header>
+
+    <div class="dots" id="dots"></div>
+
+    <div class="stage" id="stage">
+      <!-- 1 -->
+      <section id="s1" class="scr on bg-ink entering" data-tone="snow" aria-label="Hook">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s1">
+          <span class="s1-deco" aria-hidden="true">A</span>
+          <span class="s1-vrail">Digital Product Studio · München · 2024</span>
+          <div class="s1-content">
+            <span class="s1-rule" aria-hidden="true"></span>
+            <p class="s1-eyebrow">Alef Studio · München</p>
+            <h1 class="s1-hero up">
+              Gute Ideen werden<br />
+              täglich schlecht<br />
+              umgesetzt.
+            </h1>
+            <div class="s1-subrow up">
+              <p class="s1-hook">
+                Nicht weil die Idee falsch ist —<br />
+                sondern weil niemand das Ganze sieht.
+              </p>
+              <a class="s1-worklink" href="#" onclick="go(1); return false">Unsere Arbeit sehen →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section id="s2" class="scr bg-cream" data-tone="ink" aria-label="Warum">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s2">
+          <span class="s2-deco" aria-hidden="true">WARUM</span>
+          <span class="s2-num" aria-hidden="true">002</span>
+          <aside class="s2-aside">
+            <p class="s2-aside-label">Die Folge</p>
+            <p class="s2-aside-text">
+              Verschiedene Köpfe.<br />
+              Verschiedene Briefings.<br />
+              Niemand sieht das Ganze.<br />
+              Das Produkt leidet.
+            </p>
+          </aside>
+          <div class="s2-content">
+            <div class="s2-overline up">
+              <span class="s2-overline-line" aria-hidden="true"></span>
+              <span class="s2-overline-text">Das Problem</span>
+            </div>
+            <h2 class="s2-headline up">
+              Weil Strategie,<br />
+              Design, Entwicklung<br />
+              und Vertrieb meist<br />
+              getrennt gedacht werden.
+            </h2>
+            <div class="s2-tags up">
+              <span>Strategie</span>
+              <span>Design</span>
+              <span>Entwicklung</span>
+              <span>Vertrieb</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 — Alef Studio -->
+      <section id="s3" class="scr bg-ink" data-tone="snow" aria-label="Alef Studio">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s3">
+          <span class="s3-deco" aria-hidden="true">01</span>
+          <div class="s3-content">
+            <div class="s3-overline up">
+              <span class="s3-overline-line" aria-hidden="true"></span>
+              <span class="s3-overline-text">Die Antwort</span>
+            </div>
+            <h2 class="s3-head up">
+              Alef Studio verbindet<br />
+              was andere trennen.
+            </h2>
+            <div class="s3-rows up" role="list">
+              <div class="s3-row" role="listitem">
+                <span class="s3-row-no">01</span><span class="s3-row-t">Geschäftsmodell &amp; BWL</span>
+              </div>
+              <div class="s3-row" role="listitem">
+                <span class="s3-row-no">02</span><span class="s3-row-t">Strategie &amp; Konzeption</span>
+              </div>
+              <div class="s3-row" role="listitem">
+                <span class="s3-row-no">03</span><span class="s3-row-t">Design &amp; Visual</span>
+              </div>
+              <div class="s3-row" role="listitem">
+                <span class="s3-row-no">04</span><span class="s3-row-t">Entwicklung &amp; Umsetzung</span>
+              </div>
+              <div class="s3-row" role="listitem">
+                <span class="s3-row-no">05</span><span class="s3-row-t">Marketing &amp; Content</span>
+              </div>
+              <div class="s3-row" role="listitem">
+                <span class="s3-row-no">06</span><span class="s3-row-t">Vertrieb &amp; Aktivierung</span>
+              </div>
+            </div>
+            <p class="s3-foot up">
+              Ein Studio. KI-gestützt.<br />
+              In Wochen statt Monaten.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 — Denkweise -->
+      <section id="s4" class="scr bg-sand" data-tone="ink" aria-label="Denkweise">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s4">
+          <span class="s4-deco" aria-hidden="true">?</span>
+          <div class="s4-content">
+            <div class="s4-overline up">
+              <span class="s4-overline-line" aria-hidden="true"></span>
+              <span class="s4-overline-text">Wie wir denken</span>
+            </div>
+            <h2 class="s4-head up">
+              Wir starten nicht<br />
+              mit dem Design.<br />
+              Wir starten mit<br />
+              der Frage:
+            </h2>
+            <blockquote class="s4-pull up">
+              Was soll dieses<br />
+              Produkt erreichen?
+            </blockquote>
+            <p class="s4-body up">
+              Erst wenn wir das verstehen<br />
+              fangen wir an zu bauen.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 — Bärenwald -->
+      <section id="s5" class="scr bg-olive" data-tone="snow" aria-label="Bärenwald">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div
+          style="
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 55fr 45fr;
+            overflow: hidden;
+            box-sizing: border-box;
+            padding-top: var(--scr-pad-t);
+          "
+        >
+          <div
+            style="
+              position: relative;
+              min-height: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-family: 'DM Mono', monospace;
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: 0.08em;
+              color: rgba(248, 246, 241, 0.15);
+              text-align: center;
+            "
+          >
+            [ Bärenwald ]
+            <span
+              style="
+                position: absolute;
+                bottom: 12px;
+                right: 12px;
+                font-family: 'Cormorant Garamond', serif;
+                font-size: clamp(80px, 14vw, 160px);
+                font-weight: 700;
+                line-height: 1;
+                letter-spacing: -0.06em;
+                color: rgba(248, 246, 241, 0.04);
+                pointer-events: none;
+                user-select: none;
+              "
+              aria-hidden="true">01</span>
+          </div>
+          <div
+            style="
+              min-height: 0;
+              overflow: auto;
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-end;
+              padding: 24px 28px calc(var(--safe-b) + 48px) 28px;
+            "
+          >
+            <div class="s3-overline up">
+              <span class="s3-overline-line" aria-hidden="true"></span>
+              <span class="s3-overline-text">Studio · 001 · Bärenwald</span>
+            </div>
+            <h2 class="s3-head up">
+              Ein Handwerks-<br />
+              unternehmen.<br />
+              Gute Arbeit.<br />
+              Kaum digitale<br />
+              Sichtbarkeit.
+            </h2>
+            <p class="s3-row-t up" style="margin: 16px 0 0; max-width: 30ch">
+              Anfragen kamen nur über Empfehlungen.<br />
+              Kein digitales System. Kein Funnel.<br />
+              Keine Transparenz.
+            </p>
+            <div class="s3-overline up" style="margin-top: 28px">
+              <span class="s3-overline-line" aria-hidden="true"></span>
+              <span class="s3-overline-text">Was wir gebaut haben</span>
+            </div>
+            <div class="s3-rows up" style="margin-top: 8px">
+              <div class="s3-row" style="grid-template-columns: 1fr">
+                <span class="s3-row-t">Website &amp; Landingpage</span>
+              </div>
+              <div class="s3-row" style="grid-template-columns: 1fr">
+                <span class="s3-row-t">Interaktiver Preisrechner</span>
+              </div>
+              <div class="s3-row" style="grid-template-columns: 1fr">
+                <span class="s3-row-t">CRM &amp; Lead-System</span>
+              </div>
+              <div class="s3-row" style="grid-template-columns: 1fr">
+                <span class="s3-row-t">Email-Automatisierung</span>
+              </div>
+            </div>
+            <p
+              class="up"
+              style="
+                margin: 24px 0 0;
+                font-family: 'Cormorant Garamond', serif;
+                font-style: italic;
+                font-weight: 300;
+                font-size: clamp(20px, 3vw, 28px);
+                line-height: 1.2;
+                letter-spacing: -0.02em;
+                color: #c4622d;
+                max-width: 22ch;
+              "
+            >
+              Erstmals qualifizierte<br />
+              digitale Anfragen.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 — FlowLeads -->
+      <section id="s6" class="scr bg-cream" data-tone="ink" aria-label="FlowLeads">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s6">
+          <span class="s6-accent" aria-hidden="true"></span>
+          <div class="s6-overline up">
+            <span class="s6-overline-line" aria-hidden="true"></span>
+            <span class="s6-overline-text">Produkt · 002 · FlowLeads</span>
+          </div>
+          <div class="s6-main up">
+            <h2 class="s6-head">
+              Wir haben nicht<br />
+              auf einen Auftrag<br />
+              gewartet. Wir haben<br />
+              das Problem selbst<br />
+              gelöst.
+            </h2>
+            <div class="s6-stat">
+              <p class="s6-stat-label">Ergebnis</p>
+              <p class="s6-stat-num">2–3×</p>
+              <p class="s6-stat-sub">mehr Anfragen</p>
+            </div>
+          </div>
+          <div class="s6-built up">
+            <p class="s6-built-title">Was wir gebaut haben</p>
+            <div class="s6-built-row">SaaS-Plattform</div>
+            <div class="s6-built-row">8 interaktive Rechner</div>
+            <div class="s6-built-row">Lead-Dashboard</div>
+            <div class="s6-built-row">White-label &amp; Deployment</div>
+            <a class="s6-cta" href="https://getflowleads.com" target="_blank" rel="noopener noreferrer">getflowleads.com →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 — Locl -->
+      <section id="s7" class="scr bg-ink" data-tone="snow" aria-label="Locl">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s7">
+          <span class="s5-ring s5-ring--2" aria-hidden="true"></span>
+          <span class="s5-ring s5-ring--1" aria-hidden="true"></span>
+          <div class="s7-top up">
+            <p class="s7-overline">App · 003 · Locl</p>
+            <h2 class="s7-head">
+              München hat mehr<br />
+              zu bieten als<br />
+              Google Maps zeigt.
+            </h2>
+          </div>
+          <div class="s5-device fade" role="img" aria-label="Locl App Platzhalter">[ Locl ]</div>
+          <div class="s7-stack up">
+            <p class="s7-body">
+              Also haben wir<br />
+              eine App gebaut.
+            </p>
+            <div class="s7-built">
+              <p class="s7-built-title">Was wir gebaut haben</p>
+              <div class="s7-built-row">Discovery-App</div>
+              <div class="s7-built-row">Standortlogik &amp; Filter</div>
+              <div class="s7-built-row">KI-gestützte Empfehlungen</div>
+              <div class="s7-built-row">App Store Launch</div>
+            </div>
+            <a class="s7-cta" href="#" onclick="return false">Im App Store →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 — Prozess -->
+      <section id="s8" class="scr bg-snow" data-tone="ink" aria-label="Prozess">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s8">
+          <span class="s8-deco" aria-hidden="true">04</span>
+          <div class="s8-content">
+            <div class="s8-overline up">
+              <span class="s8-overline-line" aria-hidden="true"></span>
+              <span class="s8-overline-text">Wie wir arbeiten</span>
+            </div>
+            <h2 class="s8-headline up">
+              Vier Phasen.<br />
+              Kein Ergebnis das<br />
+              niemand nutzt.
+            </h2>
+            <div class="s8-rows">
+              <div class="s8-row up">
+                <span class="s8-num">01</span>
+                <div class="s8-row-main">
+                  <span class="s8-title">Verstehen</span>
+                  <p class="s8-phase-body">
+                    Dein Geschäftsmodell. Deine Zielgruppe.<br />
+                    Dein echtes Problem — nicht was du<br />
+                    glaubst zu brauchen.
+                  </p>
+                </div>
+              </div>
+              <div class="s8-row up">
+                <span class="s8-num">02</span>
+                <div class="s8-row-main">
+                  <span class="s8-title">Konzipieren</span>
+                  <p class="s8-phase-body">
+                    Struktur. Architektur. Entscheidungen.<br />
+                    Alles geklärt bevor eine Zeile Code<br />
+                    oder ein Pixel gesetzt wird.
+                  </p>
+                </div>
+              </div>
+              <div class="s8-row up">
+                <span class="s8-num">03</span>
+                <div class="s8-row-main">
+                  <span class="s8-title">Bauen</span>
+                  <p class="s8-phase-body">
+                    Schnell. Iterativ. KI-gestützt.<br />
+                    Du siehst Fortschritt jeden Tag —<br />
+                    nicht erst am Ende.
+                  </p>
+                </div>
+              </div>
+              <div class="s8-row up">
+                <span class="s8-num">04</span>
+                <div class="s8-row-main">
+                  <span class="s8-title">Launchen</span>
+                  <p class="s8-phase-body">
+                    Deployment. Go-to-Market.<br />
+                    Wir sind dabei bis es läuft —<br />
+                    nicht nur bis es fertig ist.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 — Für wen -->
+      <section id="s9" class="scr bg-sand" data-tone="ink" aria-label="Für wen">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s9fw">
+          <span class="s9fw-deco" aria-hidden="true">FÜR</span>
+          <div class="s9fw-main">
+            <div class="s9fw-spacer" aria-hidden="true"></div>
+            <div class="s9fw-top">
+              <div class="s9fw-overline up">
+                <span class="s9fw-overline-line" aria-hidden="true"></span>
+                <span class="s9fw-overline-text">Für wen wir sind</span>
+              </div>
+              <h2 class="s9fw-headline up">
+                Wir sind das<br />
+                richtige Studio<br />
+                wenn du jemanden<br />
+                suchst der mitdenkt —<br />
+                nicht nur umsetzt.
+              </h2>
+            </div>
+            <div class="s9fw-cols up">
+              <div class="s9fw-col">
+                <p class="s9fw-col-title">Für dich wenn:</p>
+                <ul class="s9fw-list">
+                  <li class="s9fw-item s9fw-item--yes">Du eine Idee hast die ein System braucht</li>
+                  <li class="s9fw-item s9fw-item--yes">Du schnell und vollständig willst</li>
+                  <li class="s9fw-item s9fw-item--yes">
+                    Du Strategie, Design und Code<br />
+                    in einer Hand willst
+                  </li>
+                  <li class="s9fw-item s9fw-item--yes">
+                    Du in einer beratungsintensiven<br />
+                    Branche arbeitest
+                  </li>
+                </ul>
+              </div>
+              <div class="s9fw-col">
+                <p class="s9fw-col-title">Nicht für dich wenn:</p>
+                <ul class="s9fw-list">
+                  <li class="s9fw-item s9fw-item--no">Du eine fertige Vorlage willst</li>
+                  <li class="s9fw-item s9fw-item--no">Du Hauptsache günstig suchst</li>
+                  <li class="s9fw-item s9fw-item--no">
+                    Du nur jemanden zum<br />
+                    Ausführen brauchst
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 — CTA -->
+      <section id="s10" class="scr bg-fire" data-tone="fire" aria-label="Kontakt">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s9">
+          <span class="s9-deco" aria-hidden="true">A</span>
+          <div class="s9-content">
+            <p class="s9-overline up">Nächster Schritt</p>
+            <h2 class="s9-headline up">
+              Bring uns deine<br />
+              <em>schwierigste Idee.</em>
+            </h2>
+            <div class="s9-rule up" role="separator" aria-hidden="true"></div>
+            <div class="s9-row up">
+              <p class="s9-copy">
+                Kein Briefing-Dokument.<br />
+                Kein Angebot das du<br />
+                nicht verstehst.<br />
+                Ein Gespräch. 20 Minuten.
+              </p>
+              <a class="s9-btn" href="mailto:hello@alef.studio">Gespräch starten →</a>
+            </div>
+            <footer class="s9-foot">
+              <span class="s9-foot-brand">ا Alef Studio · München · 2024</span>
+              <nav class="s9-foot-nav" aria-label="Rechtliches">
+                <a href="#">Impressum</a>
+                <a href="#">Datenschutz</a>
+              </nav>
+            </footer>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  <script>
+    (function () {
+      const SCREENS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10'];
+      const SCREEN_NAMES = {
+        s1: 'Start',
+        s2: 'Das Problem',
+        s3: 'Alef Studio',
+        s4: 'Unsere Denkweise',
+        s5: 'Bärenwald',
+        s6: 'FlowLeads',
+        s7: 'Locl',
+        s8: 'Prozess',
+        s9: 'Für wen',
+        s10: 'Kontakt',
+      };
+      let cur = 0;
+      let busy = false;
+
+      const hdr = document.getElementById("hdr");
+      const icBg = document.getElementById("ic-bg");
+      const icV = document.getElementById("ic-v");
+      const icD = document.getElementById("ic-d");
+      const dotsEl = document.getElementById("dots");
+
+      const TONES = {
+        snow: { fill: "#f8f6f1", stroke: "#0c0c0a" },
+        ink: { fill: "#0c0c0a", stroke: "#f8f6f1" },
+        fire: { fill: "rgba(248,246,241,0.12)", stroke: "#f8f6f1" },
+      };
+
+      function paintIcon(tone) {
+        const t = TONES[tone] || TONES.snow;
+        if (icBg) icBg.setAttribute("fill", t.fill);
+        if (icV) icV.setAttribute("stroke", t.stroke);
+        if (icD) icD.setAttribute("stroke", t.stroke);
+      }
+
+      function updateHeader(id) {
+        const scr = document.getElementById(id);
+        if (!hdr || !scr) return;
+        const tone = scr.getAttribute("data-tone") || "snow";
+        hdr.setAttribute("data-tone", tone);
+        const logoTone = id === "s10" ? "snow" : tone;
+        paintIcon(logoTone);
+      }
+
+      function updateDots() {
+        const scr = document.getElementById(SCREENS[cur]);
+        const tone = scr ? scr.getAttribute("data-tone") || "snow" : "snow";
+        const off = tone === "ink" ? "rgba(12,12,10,0.18)" : "rgba(248,246,241,0.25)";
+        const onC = "#c4622d";
+        dotsEl.querySelectorAll(".dot").forEach(function (d, i) {
+          const active = i === cur;
+          d.classList.toggle("on", active);
+          d.setAttribute("aria-current", active ? "true" : "false");
+          d.style.background = active ? onC : off;
+        });
+      }
+
+      function goTo(next) {
+        const n = ((next % SCREENS.length) + SCREENS.length) % SCREENS.length;
+        if (busy || n === cur) return;
+        busy = true;
+        const curEl = document.getElementById(SCREENS[cur]);
+        const nxtEl = document.getElementById(SCREENS[n]);
+        if (!curEl || !nxtEl) {
+          busy = false;
+          return;
+        }
+
+        curEl.classList.add("leaving");
+        curEl.classList.remove("on");
+        nxtEl.classList.remove("leaving", "entering");
+        nxtEl.classList.add("on", "entering");
+        void nxtEl.offsetWidth;
+
+        cur = n;
+        updateHeader(SCREENS[cur]);
+        updateDots();
+
+        setTimeout(function () {
+          curEl.classList.remove("leaving");
+        }, 400);
+
+        setTimeout(function () {
+          nxtEl.classList.remove("entering");
+          busy = false;
+        }, 650);
+      }
+
+      function go(dir) {
+        goTo(cur + dir);
+      }
+
+      window.go = go;
+
+      SCREENS.forEach(function (id, i) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "dot" + (i === 0 ? " on" : "");
+        const label = SCREEN_NAMES[id] || "Screen " + (i + 1);
+        b.setAttribute("aria-label", label);
+        b.addEventListener("click", function () {
+          goTo(i);
+        });
+        dotsEl.appendChild(b);
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown") {
+          e.preventDefault();
+          go(1);
+        } else if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") {
+          e.preventDefault();
+          go(-1);
+        }
+      });
+
+      var lastWheel = 0;
+      window.addEventListener(
+        "wheel",
+        function (e) {
+          if (busy) return;
+          var now = Date.now();
+          if (now - lastWheel < 800) return;
+          if (Math.abs(e.deltaY) < 40) return;
+          e.preventDefault();
+          lastWheel = now;
+          go(e.deltaY > 0 ? 1 : -1);
+        },
+        { passive: false }
+      );
+
+      var ty = 0;
+      var tt = 0;
+      window.addEventListener(
+        "touchstart",
+        function (e) {
+          if (e.touches.length !== 1) return;
+          ty = e.touches[0].clientY;
+          tt = Date.now();
+        },
+        { passive: true }
+      );
+
+      window.addEventListener(
+        "touchend",
+        function (e) {
+          if (busy) return;
+          if (Date.now() - tt > 500) return;
+          var dy = ty - e.changedTouches[0].clientY;
+          if (Math.abs(dy) < 50) return;
+          go(dy > 0 ? 1 : -1);
+        },
+        { passive: true }
+      );
+
+      requestAnimationFrame(function () {
+        var first = document.getElementById("s1");
+        if (first) first.classList.remove("entering");
+      });
+
+      updateHeader(SCREENS[0]);
+      updateDots();
+    })();
+  </script>
+</body>
+</html>
