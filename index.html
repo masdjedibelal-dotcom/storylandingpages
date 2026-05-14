@@ -255,7 +255,6 @@
       opacity: 0.5;
     }
 
-    .bg-ink::after,
     .bg-olive::after {
       content: "";
       position: absolute;
@@ -267,10 +266,6 @@
       opacity: 0.5;
       pointer-events: none;
       z-index: 1;
-    }
-
-    #s3::after {
-      display: none;
     }
 
     .bg-fire::before {
@@ -290,7 +285,8 @@
     .s2-layout,
     .s3-copy,
     .s4-layout,
-    .s8-layout,
+    .s8a-layout,
+    .s8b-layout,
     .s9-layout,
     .s10-body,
     #s5 > .s5-header,
@@ -310,7 +306,9 @@
     .s9-bg,
     .s9fw-deco,
     .s10-bg,
-    .s9-deco {
+    .s9-deco,
+    .s8a-deco,
+    .s8b-deco {
       pointer-events: none;
       z-index: 0;
     }
@@ -827,7 +825,10 @@
       min-height: 0;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      justify-content: flex-end;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       box-sizing: border-box;
       padding-top: var(--scr-pad-t);
     }
@@ -851,9 +852,9 @@
     .s4-content {
       position: relative;
       z-index: 55;
-      margin-top: auto;
+      flex-shrink: 0;
       width: 100%;
-      padding: 0 var(--px) calc(var(--safe-b) + 56px);
+      padding: 0 var(--px) calc(var(--safe-b) + 24px);
     }
 
     .s4-overline {
@@ -930,10 +931,12 @@
     #s5 {
       flex: 1;
       min-height: 0;
-      padding: calc(var(--safe-t) + 88px) 0 calc(var(--safe-b) + 24px);
+      box-sizing: border-box;
+      padding: calc(var(--safe-t) + 72px) 0 calc(var(--safe-b) + 16px);
       display: flex;
       flex-direction: column;
       gap: 0;
+      overflow: hidden;
     }
 
     .s5-header {
@@ -986,7 +989,7 @@
       letter-spacing: -0.04em;
       color: var(--snow);
       padding: 0 var(--px);
-      margin-bottom: 32px;
+      margin-bottom: 20px;
       flex-shrink: 0;
     }
 
@@ -1014,9 +1017,11 @@
       flex: 0 0 100%;
       min-width: 100%;
       width: 100%;
+      min-height: 0;
       height: 100%;
+      max-height: 100%;
       display: grid;
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows: auto minmax(0, 1fr);
       overflow: hidden;
       box-sizing: border-box;
     }
@@ -1044,7 +1049,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 24px 0;
+      padding: 18px 24px 12px;
+      flex-shrink: 0;
     }
 
     .s5-card-num {
@@ -1075,53 +1081,14 @@
       padding: 4px 10px;
     }
 
-    .s5-card-img {
-      height: 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 16px 24px;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .s5-card--dark .s5-card-img {
-      background: rgba(248, 246, 241, 0.03);
-      border: 0.5px solid rgba(248, 246, 241, 0.07);
-    }
-
-    .s5-card--cream .s5-card-img {
-      background: rgba(12, 12, 10, 0.04);
-      border: 0.5px solid rgba(12, 12, 10, 0.08);
-    }
-
-    .s5-card--olive .s5-card-img {
-      background: rgba(248, 246, 241, 0.03);
-      border: 0.5px solid rgba(248, 246, 241, 0.07);
-    }
-
-    .s5-card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .s5-card-img-ph {
-      font-family: "DM Mono", monospace;
-      font-size: 9px;
-      letter-spacing: 0.08em;
-      color: rgba(248, 246, 241, 0.15);
-    }
-
-    .s5-card--cream .s5-card-img-ph {
-      color: rgba(12, 12, 10, 0.18);
-    }
-
     .s5-card-body {
-      padding: 0 24px 20px;
+      padding: 0 24px 16px;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .s5-card-title {
@@ -1299,138 +1266,304 @@
         margin: 0 var(--px);
         border-radius: 4px;
       }
-
-      .s5-card-img {
-        height: 100px;
-      }
     }
 
-    /* ═══ Screen 8 — Prozess (s8a / s8b, gemeinsame Klassen .s8-*) ═══ */
-    .s8 {
-      position: relative;
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 60px);
+    /* ═══ Screen 8a — Wie wir denken ═══ */
+    #s8a {
+      padding: 0;
       overflow: hidden;
-    }
-
-    .s8-content {
       position: relative;
-      z-index: 55;
-      flex: 1;
       min-height: 0;
-      display: flex;
-      flex-direction: column;
-      max-width: 100%;
-      overflow: hidden;
     }
 
-    .s8-overline {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .s8-overline-line {
-      flex-shrink: 0;
-      width: 32px;
-      height: 1px;
-      background: #c4622d;
-    }
-
-    .s8-overline-text {
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: #c4622d;
-    }
-
-    .s8-headline {
-      margin: 0 0 8px;
+    .s8a-deco {
+      position: absolute;
+      left: -0.06em;
+      top: 50%;
+      transform: translateY(-50%);
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(44px, 7vw, 88px);
+      font-size: clamp(200px, 32vw, 380px);
       font-weight: 700;
-      line-height: 0.98;
-      letter-spacing: -0.04em;
-      color: var(--ink);
-      max-width: 14ch;
+      line-height: 1;
+      letter-spacing: -0.08em;
+      color: rgba(12, 12, 10, 0.04);
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
     }
 
-    .s8-rows {
+    .s8a-layout {
       flex: 1;
-      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       min-height: 0;
-      overflow: auto;
+      padding: calc(var(--safe-t) + 100px) var(--px) calc(var(--safe-b) + 56px);
+      position: relative;
+      z-index: 1;
     }
 
-    .s8-row {
-      display: grid;
-      grid-template-columns: 2.25em minmax(0, 1fr);
-      column-gap: 20px;
-      align-items: start;
-      padding: 20px 0;
-      border-top: 0.5px solid rgba(12, 12, 10, 0.06);
+    .s8a-head {
+      flex-shrink: 0;
     }
 
-    .s8-num {
-      margin: 0.35em 0 0;
+    .s8a-overline {
       font-family: "DM Mono", monospace;
       font-size: 9px;
       font-weight: 700;
-      letter-spacing: 0.06em;
-      color: rgba(12, 12, 10, 0.2);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fire);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 24px;
     }
 
-    .s8-row-main {
+    .s8a-line {
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: var(--fire);
+      flex-shrink: 0;
+    }
+
+    .s8a-headline {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(48px, 7.5vw, 96px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .s8a-headline em {
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(12, 12, 10, 0.35);
+    }
+
+    .s8a-phases {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .s8a-phase {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 20px 0;
+    }
+
+    .s8a-phase-num {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(56px, 9vw, 96px);
+      font-weight: 700;
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: var(--fire);
+      flex-shrink: 0;
+      width: clamp(56px, 9vw, 96px);
+    }
+
+    .s8a-phase-body {
+      padding-top: 8px;
+      flex: 1;
       min-width: 0;
     }
 
-    .s8-title {
-      display: block;
-      margin: 0 0 10px;
+    .s8a-phase-title {
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(22px, 3vw, 32px);
-      font-weight: 600;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
       color: var(--ink);
+      margin: 0 0 10px;
     }
 
-    .s8-phase-body {
-      margin: 0;
+    .s8a-phase-sub {
       font-family: "DM Sans", sans-serif;
       font-size: 13px;
       font-weight: 300;
-      line-height: 1.6;
+      line-height: 1.7;
       color: rgba(12, 12, 10, 0.5);
-      max-width: 48ch;
+      margin: 0;
     }
 
-    /* Screen 8b: gleiche Raster-Klassen auf bg-ink (data-tone snow) */
-    .s8--on-ink .s8-headline {
+    .s8a-divider {
+      width: 100%;
+      height: 0.5px;
+      background: rgba(12, 12, 10, 0.08);
+    }
+
+    /* ═══ Screen 8b — Wie wir bauen ═══ */
+    #s8b {
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      min-height: 0;
+    }
+
+    .s8b-deco {
+      position: absolute;
+      right: -0.08em;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(200px, 34vw, 420px);
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(248, 246, 241, 0.03);
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    .s8b-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 0;
+      padding: calc(var(--safe-t) + 100px) var(--px) calc(var(--safe-b) + 56px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .s8b-head {
+      flex-shrink: 0;
+    }
+
+    .s8b-overline {
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fire);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 24px;
+    }
+
+    .s8b-line {
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: var(--fire);
+      flex-shrink: 0;
+    }
+
+    .s8b-headline {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(48px, 7.5vw, 96px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
       color: var(--snow);
+      margin: 0;
     }
 
-    .s8--on-ink .s8-row {
-      border-top-color: rgba(255, 255, 255, 0.06);
+    .s8b-headline em {
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(248, 246, 241, 0.32);
     }
 
-    .s8--on-ink .s8-num {
-      color: rgba(248, 246, 241, 0.28);
+    .s8b-phases {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .s8--on-ink .s8-title {
+    .s8b-phase {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 20px 0;
+    }
+
+    .s8b-phase-num {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(56px, 9vw, 96px);
+      font-weight: 700;
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: var(--fire);
+      flex-shrink: 0;
+      width: clamp(56px, 9vw, 96px);
+    }
+
+    .s8b-phase-body {
+      padding-top: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .s8b-phase-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
       color: var(--snow);
+      margin: 0 0 10px;
     }
 
-    .s8--on-ink .s8-phase-body {
-      color: rgba(248, 246, 241, 0.52);
+    .s8b-phase-sub {
+      font-family: "DM Sans", sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(248, 246, 241, 0.4);
+      margin: 0;
+    }
+
+    .s8b-divider {
+      width: 100%;
+      height: 0.5px;
+      background: rgba(248, 246, 241, 0.07);
+    }
+
+    .s8b-closing {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--fire);
+      line-height: 1.1;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .s8a-layout {
+        padding: calc(var(--safe-t) + 80px) var(--px) calc(var(--safe-b) + 48px);
+      }
+
+      .s8a-headline {
+        font-size: clamp(40px, 8vw, 72px);
+      }
+
+      .s8b-layout {
+        padding: calc(var(--safe-t) + 80px) var(--px) calc(var(--safe-b) + 48px);
+      }
+
+      .s8b-headline {
+        font-size: clamp(40px, 8vw, 72px);
+      }
     }
 
     /* ═══ Screen 9 — Für wen (data-tone ink / bg-sand) ═══ */
@@ -1723,19 +1856,6 @@
         max-width: none;
       }
 
-      .s8-headline {
-        max-width: none;
-      }
-
-      .s8-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .s8-num {
-        margin: 0 0 4px;
-      }
-
       .s9fw-headline {
         max-width: none;
       }
@@ -1925,9 +2045,6 @@
                 <span class="s5-card-num">001</span>
                 <span class="s5-card-cat">Studio</span>
               </div>
-              <div class="s5-card-img">
-                <div class="s5-card-img-ph">[ Bärenwald ]</div>
-              </div>
               <div class="s5-card-body">
                 <h3 class="s5-card-title">
                   Ein komplettes<br />
@@ -1958,9 +2075,6 @@
                 <span class="s5-card-num">002</span>
                 <span class="s5-card-cat">Eigenes Produkt</span>
               </div>
-              <div class="s5-card-img">
-                <div class="s5-card-img-ph">[ FlowLeads ]</div>
-              </div>
               <div class="s5-card-body">
                 <h3 class="s5-card-title">
                   Von der Idee zum<br />
@@ -1990,9 +2104,6 @@
               <div class="s5-card-top">
                 <span class="s5-card-num">003</span>
                 <span class="s5-card-cat">Eigenes Produkt</span>
-              </div>
-              <div class="s5-card-img">
-                <div class="s5-card-img-ph">[ Locl App ]</div>
               </div>
               <div class="s5-card-body">
                 <h3 class="s5-card-title">
@@ -2032,41 +2143,51 @@
       </section>
 
       <!-- 8a — Prozess 1/2 -->
-      <section id="s8a" class="scr bg-snow" data-tone="ink" aria-label="Prozess erste Hälfte">
+      <section class="scr bg-cream" id="s8a" data-tone="ink" aria-label="Prozess erste Hälfte">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s8 s8-layout">
-          <div class="s8-content">
-            <div class="s8-overline up">
-              <span class="s8-overline-line" aria-hidden="true"></span>
-              <span class="s8-overline-text">Wie wir arbeiten · 1/2</span>
-            </div>
-            <h2 class="s8-headline up">
-              Erst verstehen.<br />
-              Dann konzipieren.
+
+        <span class="s8a-deco" aria-hidden="true">01</span>
+
+        <div class="s8a-layout">
+          <div class="s8a-head up">
+            <p class="s8a-overline">
+              <span class="s8a-line" aria-hidden="true"></span>
+              Wie wir denken
+            </p>
+            <h2 class="s8a-headline">
+              Wir stellen erst<br />
+              die unbequemen<br />
+              <em>Fragen.</em>
             </h2>
-            <div class="s8-rows">
-              <div class="s8-row up">
-                <span class="s8-num">01</span>
-                <div class="s8-row-main">
-                  <span class="s8-title">Verstehen</span>
-                  <p class="s8-phase-body">
-                    Dein Geschäftsmodell. Deine Zielgruppe.<br />
-                    Dein echtes Problem — nicht was du<br />
-                    glaubst zu brauchen.
-                  </p>
-                </div>
+          </div>
+
+          <div class="s8a-phases">
+            <div class="s8a-phase up">
+              <span class="s8a-phase-num">01</span>
+              <div class="s8a-phase-body">
+                <h3 class="s8a-phase-title">Verstehen</h3>
+                <p class="s8a-phase-sub">
+                  Dein Markt. Dein Kunde.<br />
+                  Dein echtes Problem —<br />
+                  nicht was du glaubst<br />
+                  zu brauchen.
+                </p>
               </div>
-              <div class="s8-row up">
-                <span class="s8-num">02</span>
-                <div class="s8-row-main">
-                  <span class="s8-title">Konzipieren</span>
-                  <p class="s8-phase-body">
-                    Struktur. Architektur. Entscheidungen.<br />
-                    Alles geklärt bevor eine Zeile Code<br />
-                    oder ein Pixel gesetzt wird.
-                  </p>
-                </div>
+            </div>
+
+            <div class="s8a-divider"></div>
+
+            <div class="s8a-phase up">
+              <span class="s8a-phase-num">02</span>
+              <div class="s8a-phase-body">
+                <h3 class="s8a-phase-title">Konzipieren</h3>
+                <p class="s8a-phase-sub">
+                  Struktur bevor Code.<br />
+                  Entscheidungen bevor Design.<br />
+                  Alles auf Papier bevor<br />
+                  ein Pixel gesetzt wird.
+                </p>
               </div>
             </div>
           </div>
@@ -2074,44 +2195,55 @@
       </section>
 
       <!-- 8b — Prozess 2/2 -->
-      <section id="s8b" class="scr bg-ink" data-tone="snow" aria-label="Prozess zweite Hälfte">
+      <section class="scr bg-ink" id="s8b" data-tone="snow" aria-label="Prozess zweite Hälfte">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s8 s8--on-ink s8-layout">
-          <div class="s8-content">
-            <div class="s8-overline up">
-              <span class="s8-overline-line" aria-hidden="true"></span>
-              <span class="s8-overline-text">Wie wir arbeiten · 2/2</span>
-            </div>
-            <h2 class="s8-headline up">
-              Dann bauen.<br />
-              Und launchen.
+
+        <span class="s8b-deco" aria-hidden="true">→</span>
+
+        <div class="s8b-layout">
+          <div class="s8b-head up">
+            <p class="s8b-overline">
+              <span class="s8b-line" aria-hidden="true"></span>
+              Wie wir bauen
+            </p>
+            <h2 class="s8b-headline">
+              Schnell heißt nicht<br />
+              <em>oberflächlich.</em>
             </h2>
-            <div class="s8-rows">
-              <div class="s8-row up">
-                <span class="s8-num">03</span>
-                <div class="s8-row-main">
-                  <span class="s8-title">Bauen</span>
-                  <p class="s8-phase-body">
-                    Schnell. Iterativ. KI-gestützt.<br />
-                    Du siehst Fortschritt jeden Tag —<br />
-                    nicht erst am Ende.
-                  </p>
-                </div>
+          </div>
+
+          <div class="s8b-phases">
+            <div class="s8b-phase up">
+              <span class="s8b-phase-num">03</span>
+              <div class="s8b-phase-body">
+                <h3 class="s8b-phase-title">Bauen</h3>
+                <p class="s8b-phase-sub">
+                  KI-gestützt. Iterativ.<br />
+                  Du siehst Fortschritt<br />
+                  täglich — nicht erst<br />
+                  am Ende.
+                </p>
               </div>
-              <div class="s8-row up">
-                <span class="s8-num">04</span>
-                <div class="s8-row-main">
-                  <span class="s8-title">Launchen</span>
-                  <p class="s8-phase-body">
-                    Deployment. Go-to-Market.<br />
-                    Wir sind dabei bis es läuft —<br />
-                    nicht nur bis es fertig ist.
-                  </p>
-                </div>
+            </div>
+
+            <div class="s8b-divider"></div>
+
+            <div class="s8b-phase up">
+              <span class="s8b-phase-num">04</span>
+              <div class="s8b-phase-body">
+                <h3 class="s8b-phase-title">Launchen</h3>
+                <p class="s8b-phase-sub">
+                  Deployment ist nicht<br />
+                  das Ende. Es ist der<br />
+                  Anfang. Wir bleiben<br />
+                  bis es wirklich läuft.
+                </p>
               </div>
             </div>
           </div>
+
+          <p class="s8b-closing up">„In Wochen. Nicht Monaten.“</p>
         </div>
       </section>
 
