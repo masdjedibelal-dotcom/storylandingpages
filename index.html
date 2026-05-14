@@ -290,12 +290,13 @@
     .s2-layout,
     .s3-copy,
     .s4-layout,
-    .s5-inner,
-    .s6-layout,
-    .s7-inner,
     .s8-layout,
     .s9-layout,
-    .s10-body {
+    .s10-body,
+    #s5 > .s5-header,
+    #s5 > .s5-headline,
+    #s5 > .s5-track-wrap,
+    #s5 > .s5-nav {
       position: relative;
       z-index: 1;
     }
@@ -306,14 +307,10 @@
     .s2-deco,
     .s4-bg-stat,
     .s4-deco,
-    .s6-deco-word,
-    .s6-accent,
-    .s7-bg-quote,
     .s9-bg,
     .s9fw-deco,
     .s10-bg,
-    .s9-deco,
-    .s5-ring {
+    .s9-deco {
       pointer-events: none;
       z-index: 0;
     }
@@ -929,398 +926,383 @@
       max-width: 32ch;
     }
 
-    /* ═══ Screen 5 — Locl (data-tone snow / bg-ink) ═══ */
-    .s5 {
-      position: relative;
+    /* ═══ Screen 5 — Projekte-Karussell ═══ */
+    #s5 {
       flex: 1;
       min-height: 0;
+      padding: calc(var(--safe-t) + 88px) 0 calc(var(--safe-b) + 24px);
       display: flex;
       flex-direction: column;
-      align-items: center;
+      gap: 0;
+    }
+
+    .s5-header {
+      display: flex;
       justify-content: space-between;
-      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 64px);
-      text-align: center;
-      overflow: hidden;
+      align-items: center;
+      padding: 0 var(--px);
+      margin-bottom: 20px;
+      flex-shrink: 0;
     }
 
-    .s5-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .s5-ring--1 {
-      width: min(70vw, 480px);
-      height: min(70vw, 480px);
-      border: 0.5px solid rgba(248, 246, 241, 0.04);
-    }
-
-    .s5-ring--2 {
-      width: min(90vw, 680px);
-      height: min(90vw, 680px);
-      border: 0.5px solid rgba(248, 246, 241, 0.025);
-    }
-
-    .s5-top {
-      position: relative;
-      z-index: 1;
-      max-width: 100%;
-    }
-
-    .s5-eyebrow {
-      margin: 0 0 20px;
+    .s5-overline {
       font-family: "DM Mono", monospace;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #c4622d;
-    }
-
-    .s5-head {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(44px, 7.5vw, 96px);
-      font-weight: 300;
-      font-style: italic;
-      line-height: 0.97;
-      letter-spacing: -0.04em;
-      color: var(--snow);
-    }
-
-    .s5-head em {
-      font-style: italic;
-      font-weight: 300;
-    }
-
-    .s5-device {
-      position: relative;
-      z-index: 1;
-      width: auto;
-      height: clamp(200px, 32vh, 320px);
-      aspect-ratio: 9 / 19;
-      border-radius: 28px;
-      background: rgba(248, 246, 241, 0.04);
-      border: 0.5px solid rgba(248, 246, 241, 0.1);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-family: "DM Mono", monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: rgba(248, 246, 241, 0.18);
-      flex-shrink: 0;
-    }
-
-    .s5-bottom {
-      position: relative;
-      z-index: 55;
+      color: var(--fire);
       display: flex;
-      align-items: center;
-      gap: 32px;
-      justify-content: center;
-      flex-wrap: wrap;
-      max-width: 100%;
-    }
-
-    .s5-body {
-      margin: 0;
-      font-family: "DM Sans", sans-serif;
-      font-size: 17px;
-      font-weight: 300;
-      line-height: 1.7;
-      color: rgba(248, 246, 241, 0.4);
-      text-align: left;
-      max-width: 24ch;
-    }
-
-    .s5-cta {
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--snow);
-      text-decoration: none;
-      border-bottom: 0.5px solid rgba(248, 246, 241, 0.3);
-      padding-bottom: 3px;
-      white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .s5-cta:hover {
-      color: rgba(248, 246, 241, 0.85);
-    }
-
-    /* ═══ Screen 6 — FlowLeads (data-tone ink / bg-cream) ═══ */
-    .s6 {
-      position: relative;
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 60px);
-      overflow: hidden;
-    }
-
-    .s6-accent {
-      position: absolute;
-      left: 0;
-      top: 25%;
-      bottom: 25%;
-      width: 3px;
-      display: block;
-      background: #c4622d;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .s6-overline {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: row;
       align-items: center;
       gap: 14px;
-      margin-bottom: 28px;
     }
 
-    .s6-overline-line {
-      flex-shrink: 0;
-      width: 32px;
+    .s5-overline-line {
+      display: block;
+      width: 20px;
       height: 1px;
-      background: #c4622d;
+      background: var(--fire);
+      flex-shrink: 0;
     }
 
-    .s6-overline-text {
+    .s5-counter {
       font-family: "DM Mono", monospace;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.12em;
-      text-transform: none;
-      color: #c4622d;
+      color: rgba(248, 246, 241, 0.2);
     }
 
-    .s6-main {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: end;
-      flex: 1;
-      min-height: 0;
+    .s5-counter-sep {
+      margin: 0 6px;
+      color: rgba(248, 246, 241, 0.1);
     }
 
-    .s6-head {
-      margin: 0;
+    .s5-headline {
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(32px, 5.2vw, 68px);
+      font-size: clamp(36px, 6vw, 64px);
       font-weight: 700;
-      line-height: 0.98;
+      line-height: 0.95;
       letter-spacing: -0.04em;
-      color: var(--ink);
-      max-width: 15ch;
+      color: var(--snow);
+      padding: 0 var(--px);
+      margin-bottom: 32px;
+      flex-shrink: 0;
     }
 
-    .s6-stat {
-      text-align: right;
-      justify-self: end;
-      max-width: 100%;
+    .s5-headline em {
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(248, 246, 241, 0.3);
     }
 
-    .s6-stat-label {
-      margin: 0 0 8px;
+    .s5-track-wrap {
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+      position: relative;
+    }
+
+    .s5-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    .s5-card {
+      flex: 0 0 100%;
+      min-width: 100%;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .s5-card--dark {
+      background: var(--ink);
+      border: 0.5px solid rgba(248, 246, 241, 0.06);
+      margin: 0 var(--px);
+      border-radius: 4px;
+    }
+
+    .s5-card--cream {
+      background: var(--cream);
+      margin: 0;
+    }
+
+    .s5-card--olive {
+      background: var(--olive);
+      margin: 0 var(--px);
+      border-radius: 4px;
+      border: 0.5px solid rgba(248, 246, 241, 0.06);
+    }
+
+    .s5-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px 0;
+    }
+
+    .s5-card-num {
       font-family: "DM Mono", monospace;
-      font-size: 10px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+
+    .s5-card--dark .s5-card-num,
+    .s5-card--olive .s5-card-num {
+      color: rgba(248, 246, 241, 0.2);
+    }
+
+    .s5-card--cream .s5-card-num {
+      color: rgba(12, 12, 10, 0.2);
+    }
+
+    .s5-card-cat {
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
+      color: var(--fire);
+      border: 0.5px solid var(--fire);
+      border-radius: 2px;
+      padding: 4px 10px;
+    }
+
+    .s5-card-img {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 24px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .s5-card--dark .s5-card-img {
+      background: rgba(248, 246, 241, 0.03);
+      border: 0.5px solid rgba(248, 246, 241, 0.07);
+    }
+
+    .s5-card--cream .s5-card-img {
+      background: rgba(12, 12, 10, 0.04);
+      border: 0.5px solid rgba(12, 12, 10, 0.08);
+    }
+
+    .s5-card--olive .s5-card-img {
+      background: rgba(248, 246, 241, 0.03);
+      border: 0.5px solid rgba(248, 246, 241, 0.07);
+    }
+
+    .s5-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .s5-card-img-ph {
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: rgba(248, 246, 241, 0.15);
+    }
+
+    .s5-card--cream .s5-card-img-ph {
+      color: rgba(12, 12, 10, 0.18);
+    }
+
+    .s5-card-body {
+      padding: 0 24px 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .s5-card-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .s5-card--dark .s5-card-title,
+    .s5-card--olive .s5-card-title {
+      color: var(--snow);
+    }
+
+    .s5-card--cream .s5-card-title {
+      color: var(--ink);
+    }
+
+    .s5-card-title em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .s5-card--dark .s5-card-title em,
+    .s5-card--olive .s5-card-title em {
+      color: rgba(248, 246, 241, 0.35);
+    }
+
+    .s5-card--cream .s5-card-title em {
       color: rgba(12, 12, 10, 0.35);
     }
 
-    .s6-stat-num {
-      margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(80px, 13vw, 160px);
-      font-weight: 700;
-      line-height: 0.85;
-      letter-spacing: -0.06em;
-      color: #c4622d;
-    }
-
-    .s6-stat-sub {
-      margin: 8px 0 0;
+    .s5-card-label {
       font-family: "DM Mono", monospace;
-      font-size: 10px;
+      font-size: 8px;
       font-weight: 700;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(12, 12, 10, 0.3);
+      color: var(--fire);
+      margin-bottom: 10px;
     }
 
-    .s6-built {
-      position: relative;
-      z-index: 1;
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 0.5px solid rgba(12, 12, 10, 0.08);
-    }
-
-    .s6-built-title {
-      margin: 0 0 16px;
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: rgba(12, 12, 10, 0.38);
-    }
-
-    .s6-built-row {
-      border-top: 0.5px solid rgba(12, 12, 10, 0.08);
-      padding: 12px 0;
-      font-family: "DM Sans", sans-serif;
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.45;
-      color: rgba(12, 12, 10, 0.55);
-    }
-
-    .s6-cta {
-      display: inline-block;
-      margin-top: 24px;
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 0.5px solid rgba(12, 12, 10, 0.3);
-      padding-bottom: 3px;
-      -webkit-tap-highlight-color: transparent;
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-
-    .s6-cta:hover {
-      color: rgba(12, 12, 10, 0.75);
-      border-bottom-color: rgba(12, 12, 10, 0.45);
-    }
-
-    /* ═══ Screen 7 — Locl (data-tone snow / bg-ink) ═══ */
-    .s7 {
-      position: relative;
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 64px);
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .s7-top {
-      position: relative;
-      z-index: 1;
-      max-width: 100%;
-    }
-
-    .s7-overline {
-      margin: 0 0 20px;
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: #c4622d;
-    }
-
-    .s7-head {
-      margin: 0 auto;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(40px, 6.5vw, 84px);
-      font-weight: 700;
-      font-style: normal;
-      line-height: 0.98;
-      letter-spacing: -0.04em;
-      color: var(--snow);
-      max-width: 14ch;
-    }
-
-    .s7-stack {
-      position: relative;
-      z-index: 55;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 22px;
-      width: 100%;
-      max-width: min(100%, 400px);
-    }
-
-    .s7-body {
+    .s5-card-list {
+      list-style: none;
       margin: 0;
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(22px, 3.2vw, 32px);
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-      color: rgba(248, 246, 241, 0.4);
-      text-align: center;
-      max-width: 22ch;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 16px;
     }
 
-    .s7-built {
-      width: 100%;
-      text-align: left;
-    }
-
-    .s7-built-title {
-      margin: 0 0 12px;
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: rgba(248, 246, 241, 0.32);
-    }
-
-    .s7-built-row {
-      border-top: 0.5px solid rgba(248, 246, 241, 0.06);
-      padding: 11px 0;
+    .s5-card-list li {
       font-family: "DM Sans", sans-serif;
-      font-size: 15px;
+      font-size: 12px;
       font-weight: 300;
-      line-height: 1.45;
-      color: rgba(248, 246, 241, 0.48);
+      line-height: 1.5;
+      padding-left: 12px;
+      position: relative;
     }
 
-    .s7-cta {
-      font-family: "DM Mono", monospace;
+    .s5-card-list li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
       font-size: 10px;
+      color: var(--fire);
+    }
+
+    .s5-card--dark .s5-card-list li,
+    .s5-card--olive .s5-card-list li {
+      color: rgba(248, 246, 241, 0.45);
+    }
+
+    .s5-card--cream .s5-card-list li {
+      color: rgba(12, 12, 10, 0.5);
+    }
+
+    .s5-card-result {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 0.5px solid rgba(248, 246, 241, 0.07);
+    }
+
+    .s5-card--cream .s5-card-result {
+      border-top-color: rgba(12, 12, 10, 0.08);
+    }
+
+    .s5-card-result-label {
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
       font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: var(--snow);
-      text-decoration: none;
-      border-bottom: 0.5px solid rgba(248, 246, 241, 0.3);
-      padding-bottom: 3px;
-      white-space: nowrap;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fire);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .s5-card-result-text {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(14px, 2.5vw, 18px);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .s5-card--dark .s5-card-result-text,
+    .s5-card--olive .s5-card-result-text {
+      color: rgba(248, 246, 241, 0.7);
+    }
+
+    .s5-card--cream .s5-card-result-text {
+      color: rgba(12, 12, 10, 0.6);
+    }
+
+    .s5-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px var(--px) 0;
+      flex-shrink: 0;
+    }
+
+    .s5-btn {
+      font-family: "DM Mono", monospace;
+      font-size: 14px;
+      font-weight: 700;
+      background: none;
+      border: none;
+      color: rgba(248, 246, 241, 0.35);
+      cursor: pointer;
+      padding: 8px 12px;
+      transition: color 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .s7-cta:hover {
-      color: rgba(248, 246, 241, 0.85);
-      border-bottom-color: rgba(248, 246, 241, 0.5);
+    .s5-btn:hover {
+      color: var(--snow);
+    }
+
+    .s5-btn:disabled {
+      color: rgba(248, 246, 241, 0.1);
+      cursor: default;
+    }
+
+    .s5-nav-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .s5-nav-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(248, 246, 241, 0.2);
+      transition: all 0.3s;
+      cursor: pointer;
+      padding: 0;
+      border: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .s5-nav-dot.on {
+      background: var(--fire);
+      transform: scale(1.5);
+    }
+
+    @media (max-width: 768px) {
+      .s5-card--cream {
+        margin: 0 var(--px);
+        border-radius: 4px;
+      }
+
+      .s5-card-img {
+        height: 100px;
+      }
     }
 
     /* ═══ Screen 8 — Prozess (s8a / s8b, gemeinsame Klassen .s8-*) ═══ */
@@ -1741,32 +1723,6 @@
         max-width: none;
       }
 
-      .s5-bottom {
-        flex-direction: column;
-        gap: 16px;
-        align-items: center;
-      }
-
-      .s6-main {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        align-items: flex-start;
-      }
-
-      .s6-stat {
-        text-align: left;
-        justify-self: start;
-      }
-
-      .s6-head {
-        max-width: none;
-      }
-
-      .s7-head {
-        font-size: clamp(32px, 8vw, 64px);
-        max-width: none;
-      }
-
       .s8-headline {
         max-width: none;
       }
@@ -1940,185 +1896,138 @@
         </div>
       </section>
 
-      <!-- 5 — Bärenwald -->
-      <section id="s5" class="scr bg-olive" data-tone="snow" aria-label="Bärenwald">
+      <!-- 5 — Projekte (Karussell) -->
+      <section class="scr bg-ink" id="s5" data-tone="snow" aria-label="Projekte">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div
-          class="s5-inner"
-          style="
-            flex: 1;
-            min-height: 0;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 55fr 45fr;
-            overflow: hidden;
-            box-sizing: border-box;
-            padding-top: var(--scr-pad-t);
-          "
-        >
-          <div
-            style="
-              position: relative;
-              min-height: 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-family: 'DM Mono', monospace;
-              font-size: 11px;
-              font-weight: 700;
-              letter-spacing: 0.08em;
-              color: rgba(248, 246, 241, 0.15);
-              text-align: center;
-            "
-          >
-            [ Bärenwald ]
-            <span
-              style="
-                position: absolute;
-                bottom: 12px;
-                right: 12px;
-                font-family: 'Cormorant Garamond', serif;
-                font-size: clamp(80px, 14vw, 160px);
-                font-weight: 700;
-                line-height: 1;
-                letter-spacing: -0.06em;
-                color: rgba(248, 246, 241, 0.04);
-                pointer-events: none;
-                user-select: none;
-              "
-              aria-hidden="true">01</span>
-          </div>
-          <div
-            style="
-              min-height: 0;
-              overflow: auto;
-              display: flex;
-              flex-direction: column;
-              justify-content: flex-end;
-              padding: 24px 28px calc(var(--safe-b) + 48px) 28px;
-            "
-          >
-            <div class="s3-overline up">
-              <span class="s3-overline-line" aria-hidden="true"></span>
-              <span class="s3-overline-text">Studio · 001 · Bärenwald</span>
-            </div>
-            <h2 class="s3-head up">
-              Ein Handwerks-<br />
-              unternehmen.<br />
-              Gute Arbeit.<br />
-              Kaum digitale<br />
-              Sichtbarkeit.
-            </h2>
-            <p class="s3-row-t up" style="margin: 16px 0 0; max-width: 30ch">
-              Anfragen kamen nur über Empfehlungen.<br />
-              Kein digitales System. Kein Funnel.<br />
-              Keine Transparenz.
-            </p>
-            <div class="s3-overline up" style="margin-top: 28px">
-              <span class="s3-overline-line" aria-hidden="true"></span>
-              <span class="s3-overline-text">Was wir gebaut haben</span>
-            </div>
-            <div class="s3-rows up" style="margin-top: 8px">
-              <div class="s3-row" style="grid-template-columns: 1fr">
-                <span class="s3-row-t">Website &amp; Landingpage</span>
+
+        <div class="s5-header">
+          <p class="s5-overline">
+            <span class="s5-overline-line" aria-hidden="true"></span>
+            Ausgewählte Projekte
+          </p>
+          <p class="s5-counter">
+            <span id="s5-cur">01</span>
+            <span class="s5-counter-sep">/</span>
+            <span>03</span>
+          </p>
+        </div>
+
+        <h2 class="s5-headline">
+          Drei Projekte.<br />
+          <em>Von Konzept bis<br />Deployment.</em>
+        </h2>
+
+        <div class="s5-track-wrap">
+          <div class="s5-track" id="s5Track">
+            <article class="s5-card s5-card--dark">
+              <div class="s5-card-top">
+                <span class="s5-card-num">001</span>
+                <span class="s5-card-cat">Studio</span>
               </div>
-              <div class="s3-row" style="grid-template-columns: 1fr">
-                <span class="s3-row-t">Interaktiver Preisrechner</span>
+              <div class="s5-card-img">
+                <div class="s5-card-img-ph">[ Bärenwald ]</div>
               </div>
-              <div class="s3-row" style="grid-template-columns: 1fr">
-                <span class="s3-row-t">CRM &amp; Lead-System</span>
+              <div class="s5-card-body">
+                <h3 class="s5-card-title">
+                  Ein komplettes<br />
+                  digitales System.<br />
+                  <em>In Wochen.</em>
+                </h3>
+                <p class="s5-card-label">Was wir gebaut haben</p>
+                <ul class="s5-card-list">
+                  <li>Positionierung &amp; Konzept</li>
+                  <li>Website &amp; Landingpage</li>
+                  <li>Interaktiver Preisrechner</li>
+                  <li>Lead-System &amp; CRM</li>
+                  <li>Email-Automatisierung</li>
+                </ul>
+                <div class="s5-card-result">
+                  <span class="s5-card-result-label">Ergebnis</span>
+                  <p class="s5-card-result-text">
+                    Erstmals digitale Leads.<br />
+                    Kunden kommen mit<br />
+                    konkretem Bedarf an.
+                  </p>
+                </div>
               </div>
-              <div class="s3-row" style="grid-template-columns: 1fr">
-                <span class="s3-row-t">Email-Automatisierung</span>
+            </article>
+
+            <article class="s5-card s5-card--cream">
+              <div class="s5-card-top">
+                <span class="s5-card-num">002</span>
+                <span class="s5-card-cat">Eigenes Produkt</span>
               </div>
-            </div>
-            <p
-              class="up"
-              style="
-                margin: 24px 0 0;
-                font-family: 'Cormorant Garamond', serif;
-                font-style: italic;
-                font-weight: 300;
-                font-size: clamp(20px, 3vw, 28px);
-                line-height: 1.2;
-                letter-spacing: -0.02em;
-                color: #c4622d;
-                max-width: 22ch;
-              "
-            >
-              Erstmals qualifizierte<br />
-              digitale Anfragen.
-            </p>
+              <div class="s5-card-img">
+                <div class="s5-card-img-ph">[ FlowLeads ]</div>
+              </div>
+              <div class="s5-card-body">
+                <h3 class="s5-card-title">
+                  Von der Idee zum<br />
+                  fertigen Produkt.<br />
+                  <em>Live in Wochen.</em>
+                </h3>
+                <p class="s5-card-label">Was wir gebaut haben</p>
+                <ul class="s5-card-list">
+                  <li>Produktkonzept &amp; Design</li>
+                  <li>8 interaktive Microsites</li>
+                  <li>Web-App &amp; Backend</li>
+                  <li>Zahlungssystem</li>
+                  <li>Landing Page &amp; Marketing</li>
+                </ul>
+                <div class="s5-card-result">
+                  <span class="s5-card-result-label">Ergebnis</span>
+                  <p class="s5-card-result-text">
+                    2–3× mehr Anfragen<br />
+                    50% weniger Zeit im Gespräch<br />
+                    Live · Zahlende Kunden
+                  </p>
+                </div>
+              </div>
+            </article>
+
+            <article class="s5-card s5-card--olive">
+              <div class="s5-card-top">
+                <span class="s5-card-num">003</span>
+                <span class="s5-card-cat">Eigenes Produkt</span>
+              </div>
+              <div class="s5-card-img">
+                <div class="s5-card-img-ph">[ Locl App ]</div>
+              </div>
+              <div class="s5-card-body">
+                <h3 class="s5-card-title">
+                  Eine App-Idee.<br />
+                  Zwei Plattformen.<br />
+                  <em>Im Store.</em>
+                </h3>
+                <p class="s5-card-label">Was wir gebaut haben</p>
+                <ul class="s5-card-list">
+                  <li>App-Konzept &amp; UX Design</li>
+                  <li>iOS &amp; Android App</li>
+                  <li>Standortlogik &amp; Karte</li>
+                  <li>Kategorien &amp; Filterlogik</li>
+                  <li>App Store Launch</li>
+                </ul>
+                <div class="s5-card-result">
+                  <span class="s5-card-result-label">Ergebnis</span>
+                  <p class="s5-card-result-text">
+                    Live im App Store<br />
+                    iOS &amp; Android
+                  </p>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
-      </section>
 
-      <!-- 6 — FlowLeads -->
-      <section id="s6" class="scr bg-cream" data-tone="ink" aria-label="FlowLeads">
-        <div class="tap tap-l" onclick="go(-1)"></div>
-        <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s6 s6-layout">
-          <span class="s6-accent" aria-hidden="true"></span>
-          <div class="s6-overline up">
-            <span class="s6-overline-line" aria-hidden="true"></span>
-            <span class="s6-overline-text">Produkt · 002 · FlowLeads</span>
-          </div>
-          <div class="s6-main up">
-            <h2 class="s6-head">
-              Wir haben nicht<br />
-              auf einen Auftrag<br />
-              gewartet. Wir haben<br />
-              das Problem selbst<br />
-              gelöst.
-            </h2>
-            <div class="s6-stat">
-              <p class="s6-stat-label">Ergebnis</p>
-              <p class="s6-stat-num">2–3×</p>
-              <p class="s6-stat-sub">mehr Anfragen</p>
-            </div>
-          </div>
-          <div class="s6-built up">
-            <p class="s6-built-title">Was wir gebaut haben</p>
-            <div class="s6-built-row">SaaS-Plattform</div>
-            <div class="s6-built-row">8 interaktive Rechner</div>
-            <div class="s6-built-row">Lead-Dashboard</div>
-            <div class="s6-built-row">White-label &amp; Deployment</div>
-            <a class="s6-cta" href="https://getflowleads.com" target="_blank" rel="noopener noreferrer">getflowleads.com →</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- 7 — Locl -->
-      <section id="s7" class="scr bg-ink" data-tone="snow" aria-label="Locl">
-        <div class="tap tap-l" onclick="go(-1)"></div>
-        <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s7 s7-inner">
-          <span class="s5-ring s5-ring--2" aria-hidden="true"></span>
-          <span class="s5-ring s5-ring--1" aria-hidden="true"></span>
-          <div class="s7-top up">
-            <p class="s7-overline">App · 003 · Locl</p>
-            <h2 class="s7-head">
-              München hat mehr<br />
-              zu bieten als<br />
-              Google Maps zeigt.
-            </h2>
-          </div>
-          <div class="s5-device fade" role="img" aria-label="Locl App Platzhalter">[ Locl ]</div>
-          <div class="s7-stack up">
-            <p class="s7-body">
-              Also haben wir<br />
-              eine App gebaut.
-            </p>
-            <div class="s7-built">
-              <p class="s7-built-title">Was wir gebaut haben</p>
-              <div class="s7-built-row">Discovery-App</div>
-              <div class="s7-built-row">Standortlogik &amp; Filter</div>
-              <div class="s7-built-row">KI-gestützte Empfehlungen</div>
-              <div class="s7-built-row">App Store Launch</div>
-            </div>
-            <a class="s7-cta" href="#" onclick="return false">Im App Store →</a>
-          </div>
+        <div class="s5-nav">
+          <button type="button" class="s5-btn s5-btn--prev" onclick="carousel(-1)" aria-label="Vorheriges Projekt">
+            ←
+          </button>
+          <div class="s5-nav-dots" id="s5Dots"></div>
+          <button type="button" class="s5-btn s5-btn--next" onclick="carousel(1)" aria-label="Nächstes Projekt">
+            →
+          </button>
         </div>
       </section>
 
@@ -2277,19 +2186,18 @@
 
   <script>
     (function () {
-      const SCREENS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8a', 's8b', 's9', 's10'];
+      const SCREENS = ["s1", "s2", "s3", "s4", "s5", "s8a", "s8b", "s9", "s10"];
+      const IDX_S5 = SCREENS.indexOf("s5");
       const SCREEN_NAMES = {
-        s1: 'Start',
-        s2: 'Das Problem',
-        s3: 'Video',
-        s4: 'Unsere Denkweise',
-        s5: 'Bärenwald',
-        s6: 'FlowLeads',
-        s7: 'Locl',
-        s8a: 'Prozess 1/2',
-        s8b: 'Prozess 2/2',
-        s9: 'Für wen',
-        s10: 'Kontakt',
+        s1: "Start",
+        s2: "Das Problem",
+        s3: "Video",
+        s4: "Unsere Denkweise",
+        s5: "Projekte",
+        s8a: "Prozess 1/2",
+        s8b: "Prozess 2/2",
+        s9: "Für wen",
+        s10: "Kontakt",
       };
       let cur = 0;
       let busy = false;
@@ -2314,6 +2222,58 @@
         var p = s3Video.play();
         if (p && p.catch) p.catch(function () {});
       }
+
+      var carIdx = 0;
+      var carTotal = 3;
+
+      function initCarousel() {
+        var dots = document.getElementById("s5Dots");
+        if (!dots) return;
+        dots.innerHTML = "";
+        for (var i = 0; i < carTotal; i++) {
+          var d = document.createElement("button");
+          d.type = "button";
+          d.className = "s5-nav-dot" + (i === 0 ? " on" : "");
+          d.setAttribute("aria-label", "Projekt " + (i + 1));
+          (function (idx) {
+            d.addEventListener("click", function () {
+              carGoTo(idx);
+            });
+          })(i);
+          dots.appendChild(d);
+        }
+        updateCarousel();
+      }
+
+      function updateCarousel() {
+        var wrap = document.querySelector("#s5 .s5-track-wrap");
+        var track = document.getElementById("s5Track");
+        if (!track) return;
+        var w = wrap ? wrap.getBoundingClientRect().width : 0;
+        track.style.transform = "translateX(" + -carIdx * w + "px)";
+
+        document.querySelectorAll("#s5 .s5-nav-dot").forEach(function (d, i) {
+          d.classList.toggle("on", i === carIdx);
+        });
+
+        var c = document.getElementById("s5-cur");
+        if (c) c.textContent = String(carIdx + 1).padStart(2, "0");
+
+        var prevBtn = document.querySelector("#s5 .s5-btn--prev");
+        var nextBtn = document.querySelector("#s5 .s5-btn--next");
+        if (prevBtn) prevBtn.disabled = carIdx === 0;
+        if (nextBtn) nextBtn.disabled = carIdx === carTotal - 1;
+      }
+
+      function carGoTo(i) {
+        carIdx = Math.max(0, Math.min(i, carTotal - 1));
+        updateCarousel();
+      }
+
+      function carousel(dir) {
+        carGoTo(carIdx + dir);
+      }
+      window.carousel = carousel;
 
       function paintIcon(tone) {
         if (tone === "ink") {
@@ -2375,11 +2335,17 @@
         if (busy || next === cur) return;
         busy = true;
         const n = next;
+        const prev = cur;
         const curEl = document.getElementById(SCREENS[cur]);
         const nxtEl = document.getElementById(SCREENS[n]);
         if (!curEl || !nxtEl) {
           busy = false;
           return;
+        }
+
+        if (SCREENS[prev] === "s5" && n !== prev) {
+          carIdx = 0;
+          updateCarousel();
         }
 
         curEl.classList.add("leaving");
@@ -2392,6 +2358,7 @@
         updateHeader(SCREENS[cur]);
         updateDots();
         playS3IfActive();
+        if (SCREENS[cur] === "s5") updateCarousel();
 
         setTimeout(function () {
           curEl.classList.remove("leaving");
@@ -2422,7 +2389,14 @@
         dotsEl.appendChild(b);
       });
 
+      initCarousel();
+
       document.addEventListener("keydown", function (e) {
+        if (cur === IDX_S5 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+          e.preventDefault();
+          carousel(e.key === "ArrowRight" ? 1 : -1);
+          return;
+        }
         if (e.key === "ArrowDown" && cur === SCREENS.length - 1) return;
         if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown") {
           e.preventDefault();
@@ -2450,12 +2424,14 @@
       );
 
       var ty = 0;
+      var tx = 0;
       var tt = 0;
       window.addEventListener(
         "touchstart",
         function (e) {
           if (e.touches.length !== 1) return;
           ty = e.touches[0].clientY;
+          tx = e.touches[0].clientX;
           tt = Date.now();
         },
         { passive: true }
@@ -2466,13 +2442,29 @@
         function (e) {
           if (busy) return;
           if (Date.now() - tt > 500) return;
-          var dy = ty - e.changedTouches[0].clientY;
+          var touch = e.changedTouches[0];
+          var dx = tx - touch.clientX;
+          var dy = ty - touch.clientY;
+          var s5el = document.getElementById("s5");
+          if (
+            s5el &&
+            s5el.classList.contains("on") &&
+            Math.abs(dx) > 40 &&
+            Math.abs(dx) > Math.abs(dy)
+          ) {
+            carousel(dx > 0 ? 1 : -1);
+            return;
+          }
           if (Math.abs(dy) < 50) return;
           if (dy > 0 && cur === SCREENS.length - 1) return;
           go(dy > 0 ? 1 : -1);
         },
         { passive: true }
       );
+
+      window.addEventListener("resize", function () {
+        if (document.getElementById("s5")) updateCarousel();
+      });
 
       requestAnimationFrame(function () {
         var first = document.getElementById("s1");
