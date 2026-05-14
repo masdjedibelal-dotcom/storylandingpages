@@ -71,6 +71,7 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
+      isolation: isolate;
     }
 
     .scr.on,
@@ -224,7 +225,116 @@
       background: var(--fire);
     }
 
+    /* ——— Screen-Texturen (Halftone / Grain / Streifen) ——— */
+    .bg-snow::before,
+    .bg-cream::before,
+    .bg-sand::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(
+        circle,
+        rgba(12, 12, 10, 0.06) 1px,
+        transparent 1px
+      );
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-ink::before,
+    .bg-olive::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .bg-ink::after,
+    .bg-olive::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #c4622d;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #s3::after {
+      display: none;
+    }
+
+    .bg-fire::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at top right,
+        rgba(12, 12, 10, 0.15) 0%,
+        transparent 60%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .s1-body,
+    .s2-layout,
+    .s3-copy,
+    .s4-layout,
+    .s5-inner,
+    .s6-layout,
+    .s7-inner,
+    .s8-layout,
+    .s9-layout,
+    .s10-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .s1-deco-num,
+    .s1-deco,
+    .s2-bg,
+    .s2-deco,
+    .s4-bg-stat,
+    .s4-deco,
+    .s6-deco-word,
+    .s6-accent,
+    .s7-bg-quote,
+    .s9-bg,
+    .s9fw-deco,
+    .s10-bg,
+    .s9-deco,
+    .s5-ring {
+      pointer-events: none;
+      z-index: 0;
+    }
+
     /* ——— Header ——— */
+    /* Erst einblenden wenn Layout + Schriften stehen (kein Logo-Flash) */
+    #hdr {
+      opacity: 0;
+    }
+
+    html.hdr-ready #hdr {
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #hdr {
+        opacity: 1;
+        transition: color 0.5s;
+      }
+    }
+
     .hdr {
       position: fixed;
       top: 0;
@@ -235,7 +345,7 @@
       justify-content: space-between;
       align-items: center;
       padding: calc(var(--safe-t) + 26px) var(--px) 20px;
-      transition: color 0.5s;
+      transition: opacity 0.28s ease, color 0.5s;
       pointer-events: none;
     }
 
@@ -428,22 +538,6 @@
       white-space: nowrap;
     }
 
-    .s1-vrail {
-      position: absolute;
-      left: 20px;
-      bottom: 120px;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      color: rgba(248, 246, 241, 0.15);
-      pointer-events: none;
-      user-select: none;
-      white-space: nowrap;
-    }
-
     .s1-content {
       position: relative;
       z-index: 55;
@@ -558,36 +652,6 @@
       user-select: none;
     }
 
-    .s2-aside {
-      position: absolute;
-      right: var(--px);
-      top: max(50%, calc(var(--hdr-stack) + 140px));
-      transform: translateY(-50%);
-      max-width: 260px;
-      border-left: 1px solid rgba(12, 12, 10, 0.15);
-      padding-left: 20px;
-      z-index: 4;
-    }
-
-    .s2-aside-label {
-      margin: 0 0 12px;
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: none;
-      color: rgba(12, 12, 10, 0.3);
-    }
-
-    .s2-aside-text {
-      margin: 0;
-      font-family: "DM Sans", sans-serif;
-      font-size: 17px;
-      font-weight: 300;
-      line-height: 1.75;
-      color: rgba(12, 12, 10, 0.5);
-    }
-
     .s2-content {
       position: relative;
       z-index: 55;
@@ -650,41 +714,40 @@
       color: rgba(12, 12, 10, 0.4);
     }
 
-    /* ═══ Screen 3 — Alef Studio (data-tone snow / bg-ink) ═══ */
-    .s3 {
-      flex: 1;
-      min-height: 0;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+    /* ═══ Screen 3 — Fullscreen-Video (#s3) ═══ */
+    #s3 {
+      padding: 0;
+      background: var(--ink);
       box-sizing: border-box;
-      padding-top: var(--scr-pad-t);
     }
 
-    .s3-deco {
+    .s3-copy {
       position: absolute;
-      top: 0;
-      right: var(--px);
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(100px, 18vw, 200px);
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -0.06em;
-      color: rgba(248, 246, 241, 0.04);
+      inset: 0;
+      z-index: 1;
       pointer-events: none;
-      user-select: none;
-      white-space: nowrap;
     }
 
-    .s3-content {
-      position: relative;
-      z-index: 55;
-      margin-top: auto;
-      width: 100%;
-      padding: 0 var(--px) calc(var(--safe-b) + 56px);
+    .hdr[data-surface="transparent"] {
+      background: transparent !important;
+      border-bottom-color: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
 
+    .hdr[data-surface="transparent"] .hdr-name {
+      color: #f8f6f1;
+    }
+
+    .hdr[data-surface="transparent"] .hdr-nav a {
+      color: rgba(248, 246, 241, 0.35);
+    }
+
+    .hdr[data-surface="transparent"] .hdr-nav a:hover {
+      color: var(--snow);
+    }
+
+    /* .s3-overline … .s3-foot — weiter für Screen 5 (Bärenwald) */
     .s3-overline {
       display: flex;
       flex-direction: row;
@@ -775,15 +838,16 @@
     .s4-deco {
       position: absolute;
       top: 0;
-      left: calc(var(--px) - 0.12em);
+      right: calc(var(--px) - 0.08em);
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(140px, 28vw, 320px);
+      font-size: clamp(300px, 48vw, 600px);
       font-weight: 700;
       line-height: 1;
-      letter-spacing: -0.02em;
-      color: rgba(12, 12, 10, 0.04);
+      letter-spacing: -0.08em;
+      color: rgba(12, 12, 10, 0.03);
       pointer-events: none;
       user-select: none;
+      white-space: nowrap;
       z-index: 0;
     }
 
@@ -820,9 +884,9 @@
     }
 
     .s4-head {
-      margin: 0 0 20px;
+      margin: 0 0 24px;
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(40px, 6.5vw, 76px);
+      font-size: clamp(64px, 10vw, 116px);
       font-weight: 700;
       line-height: 0.98;
       letter-spacing: -0.04em;
@@ -830,18 +894,28 @@
       max-width: 16ch;
     }
 
+    .s4-accent {
+      display: block;
+      width: 48px;
+      height: 2px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: #c4622d;
+    }
+
     .s4-pull {
-      margin: 0 0 24px;
+      margin: 40px 0 24px;
       padding: 0;
       border: none;
       quotes: none;
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(28px, 4vw, 48px);
+      font-size: clamp(36px, 5vw, 64px);
       font-style: italic;
       font-weight: 300;
       line-height: 1.12;
       letter-spacing: -0.02em;
-      color: rgba(12, 12, 10, 0.4);
+      color: rgba(12, 12, 10, 0.35);
       max-width: 20ch;
     }
 
@@ -1249,7 +1323,7 @@
       border-bottom-color: rgba(248, 246, 241, 0.5);
     }
 
-    /* ═══ Screen 8 — Prozess (data-tone ink / bg-snow) ═══ */
+    /* ═══ Screen 8 — Prozess (s8a / s8b, gemeinsame Klassen .s8-*) ═══ */
     .s8 {
       position: relative;
       flex: 1;
@@ -1258,22 +1332,6 @@
       flex-direction: column;
       padding: var(--scr-pad-t) var(--px) calc(var(--safe-b) + 60px);
       overflow: hidden;
-    }
-
-    .s8-deco {
-      position: absolute;
-      top: 0;
-      right: var(--px);
-      font-family: "Cormorant Garamond", serif;
-      font-size: clamp(100px, 18vw, 200px);
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -0.06em;
-      color: rgba(12, 12, 10, 0.05);
-      pointer-events: none;
-      user-select: none;
-      white-space: nowrap;
-      z-index: 0;
     }
 
     .s8-content {
@@ -1372,6 +1430,27 @@
       max-width: 48ch;
     }
 
+    /* Screen 8b: gleiche Raster-Klassen auf bg-ink (data-tone snow) */
+    .s8--on-ink .s8-headline {
+      color: var(--snow);
+    }
+
+    .s8--on-ink .s8-row {
+      border-top-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .s8--on-ink .s8-num {
+      color: rgba(248, 246, 241, 0.28);
+    }
+
+    .s8--on-ink .s8-title {
+      color: var(--snow);
+    }
+
+    .s8--on-ink .s8-phase-body {
+      color: rgba(248, 246, 241, 0.52);
+    }
+
     /* ═══ Screen 9 — Für wen (data-tone ink / bg-sand) ═══ */
     .s9fw {
       position: relative;
@@ -1389,10 +1468,10 @@
       top: 0;
       left: calc(var(--px) - 0.06em);
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(120px, 22vw, 260px);
+      font-size: clamp(160px, 34vw, 420px);
       font-weight: 700;
       line-height: 1;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.06em;
       color: rgba(12, 12, 10, 0.04);
       pointer-events: none;
       user-select: none;
@@ -1400,22 +1479,13 @@
       z-index: 0;
     }
 
-    .s9fw-main {
+    .s9fw-inner {
       position: relative;
       z-index: 55;
       flex: 1;
       min-height: 0;
       display: flex;
       flex-direction: column;
-    }
-
-    .s9fw-spacer {
-      flex: 1;
-      min-height: 16px;
-    }
-
-    .s9fw-top {
-      flex-shrink: 0;
     }
 
     .s9fw-overline {
@@ -1443,73 +1513,44 @@
     }
 
     .s9fw-headline {
-      margin: 0 0 36px;
+      margin: 0 0 8px;
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(36px, 5.8vw, 72px);
+      font-size: clamp(48px, 8vw, 100px);
       font-weight: 700;
       line-height: 0.98;
       letter-spacing: -0.04em;
       color: var(--ink);
-      max-width: 18ch;
+      max-width: 12ch;
     }
 
-    .s9fw-cols {
-      flex-shrink: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px 48px;
-      align-items: start;
+    .s9fw-lines {
+      margin-top: 12px;
     }
 
-    .s9fw-col-title {
-      margin: 0 0 18px;
+    .s9fw-line {
+      margin: 0;
+      padding: 24px 0;
+      border-top: 0.5px solid rgba(12, 12, 10, 0.08);
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 22ch;
+    }
+
+    .s9fw-foot {
+      margin: auto 0 0;
+      padding-top: 28px;
       font-family: "DM Mono", monospace;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.1em;
+      line-height: 1.65;
       text-transform: none;
-      color: rgba(12, 12, 10, 0.38);
-    }
-
-    .s9fw-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .s9fw-item {
-      position: relative;
-      margin: 0 0 16px;
-      padding-left: 14px;
-      font-family: "DM Sans", sans-serif;
-      font-size: 14px;
-      font-weight: 300;
-      line-height: 1.55;
-      color: rgba(12, 12, 10, 0.72);
-    }
-
-    .s9fw-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .s9fw-item--yes::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.32em;
-      bottom: 0.32em;
-      width: 0.5px;
-      background: #c4622d;
-    }
-
-    .s9fw-item--no::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.32em;
-      bottom: 0.32em;
-      width: 0.5px;
-      background: rgba(12, 12, 10, 0.3);
+      color: rgba(12, 12, 10, 0.25);
+      max-width: 52ch;
     }
 
     /* ═══ Screen 10 — CTA (data-tone fire / bg-fire) — Klassen .s9-* ═══ */
@@ -1665,35 +1706,12 @@
     }
 
     @media (max-width: 768px) {
-      .s1-vrail {
-        left: 12px;
-        bottom: 96px;
-        font-size: 9px;
-      }
-
-      .s2-aside {
-        position: static;
-        transform: none;
-        max-width: none;
-        border-left: none;
-        border-top: 1px solid rgba(12, 12, 10, 0.12);
-        padding-left: 0;
-        padding-top: 20px;
-        margin-bottom: 28px;
-        order: -1;
-      }
-
       .s2-num {
         top: 8px;
       }
 
       .s2-content {
         padding-top: 8px;
-      }
-
-      .s3-deco {
-        top: 0;
-        font-size: clamp(72px, 20vw, 140px);
       }
 
       .s3-head {
@@ -1711,7 +1729,8 @@
 
       .s4-deco {
         top: 0;
-        font-size: clamp(100px, 36vw, 220px);
+        right: calc(var(--px) - 0.04em);
+        font-size: clamp(120px, 42vw, 320px);
       }
 
       .s4-head {
@@ -1761,17 +1780,16 @@
         margin: 0 0 4px;
       }
 
-      .s9fw-cols {
-        grid-template-columns: 1fr;
-        gap: 36px;
-      }
-
       .s9fw-headline {
         max-width: none;
       }
 
       .s9fw-deco {
-        font-size: clamp(88px, 28vw, 180px);
+        font-size: clamp(100px, 40vw, 240px);
+      }
+
+      .s9fw-line {
+        max-width: none;
       }
 
       .s9-row {
@@ -1806,12 +1824,11 @@
       <section id="s1" class="scr on bg-ink entering" data-tone="snow" aria-label="Hook">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s1">
+        <div class="s1 s1-body">
           <span class="s1-deco" aria-hidden="true">A</span>
-          <span class="s1-vrail">Digital Product Studio · München · 2024</span>
           <div class="s1-content">
             <span class="s1-rule" aria-hidden="true"></span>
-            <p class="s1-eyebrow">Alef Studio · München</p>
+            <p class="s1-eyebrow">Digital Product Studio</p>
             <h1 class="s1-hero up">
               Gute Ideen werden<br />
               täglich schlecht<br />
@@ -1832,18 +1849,9 @@
       <section id="s2" class="scr bg-cream" data-tone="ink" aria-label="Warum">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s2">
+        <div class="s2 s2-layout">
           <span class="s2-deco" aria-hidden="true">WARUM</span>
           <span class="s2-num" aria-hidden="true">002</span>
-          <aside class="s2-aside">
-            <p class="s2-aside-label">Die Folge</p>
-            <p class="s2-aside-text">
-              Verschiedene Köpfe.<br />
-              Verschiedene Briefings.<br />
-              Niemand sieht das Ganze.<br />
-              Das Produkt leidet.
-            </p>
-          </aside>
           <div class="s2-content">
             <div class="s2-overline up">
               <span class="s2-overline-line" aria-hidden="true"></span>
@@ -1865,46 +1873,40 @@
         </div>
       </section>
 
-      <!-- 3 — Alef Studio -->
-      <section id="s3" class="scr bg-ink" data-tone="snow" aria-label="Alef Studio">
+      <!-- 3 — Video -->
+      <section class="scr bg-ink" id="s3" data-tone="snow" aria-label="Alef Studio Video">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s3">
-          <span class="s3-deco" aria-hidden="true">01</span>
-          <div class="s3-content">
-            <div class="s3-overline up">
-              <span class="s3-overline-line" aria-hidden="true"></span>
-              <span class="s3-overline-text">Die Antwort</span>
-            </div>
-            <h2 class="s3-head up">
-              Alef Studio verbindet<br />
-              was andere trennen.
-            </h2>
-            <div class="s3-rows up" role="list">
-              <div class="s3-row" role="listitem">
-                <span class="s3-row-no">01</span><span class="s3-row-t">Geschäftsmodell &amp; BWL</span>
-              </div>
-              <div class="s3-row" role="listitem">
-                <span class="s3-row-no">02</span><span class="s3-row-t">Strategie &amp; Konzeption</span>
-              </div>
-              <div class="s3-row" role="listitem">
-                <span class="s3-row-no">03</span><span class="s3-row-t">Design &amp; Visual</span>
-              </div>
-              <div class="s3-row" role="listitem">
-                <span class="s3-row-no">04</span><span class="s3-row-t">Entwicklung &amp; Umsetzung</span>
-              </div>
-              <div class="s3-row" role="listitem">
-                <span class="s3-row-no">05</span><span class="s3-row-t">Marketing &amp; Content</span>
-              </div>
-              <div class="s3-row" role="listitem">
-                <span class="s3-row-no">06</span><span class="s3-row-t">Vertrieb &amp; Aktivierung</span>
-              </div>
-            </div>
-            <p class="s3-foot up">
-              Ein Studio. KI-gestützt.<br />
-              In Wochen statt Monaten.
-            </p>
-          </div>
+
+        <div class="s3-copy">
+        <video
+          id="s3-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          style="
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+          "
+        >
+          <source src="assets/alef-intro.mp4" type="video/mp4" />
+        </video>
+
+        <div
+          style="
+            position: absolute;
+            inset: 0;
+            background: rgba(12, 12, 10, 0.35);
+            z-index: 1;
+            pointer-events: none;
+          "
+          aria-hidden="true"
+        ></div>
         </div>
       </section>
 
@@ -1912,7 +1914,7 @@
       <section id="s4" class="scr bg-sand" data-tone="ink" aria-label="Denkweise">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s4">
+        <div class="s4 s4-layout">
           <span class="s4-deco" aria-hidden="true">?</span>
           <div class="s4-content">
             <div class="s4-overline up">
@@ -1925,6 +1927,7 @@
               Wir starten mit<br />
               der Frage:
             </h2>
+            <span class="s4-accent up" aria-hidden="true"></span>
             <blockquote class="s4-pull up">
               Was soll dieses<br />
               Produkt erreichen?
@@ -1942,6 +1945,7 @@
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
         <div
+          class="s5-inner"
           style="
             flex: 1;
             min-height: 0;
@@ -2054,7 +2058,7 @@
       <section id="s6" class="scr bg-cream" data-tone="ink" aria-label="FlowLeads">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s6">
+        <div class="s6 s6-layout">
           <span class="s6-accent" aria-hidden="true"></span>
           <div class="s6-overline up">
             <span class="s6-overline-line" aria-hidden="true"></span>
@@ -2089,7 +2093,7 @@
       <section id="s7" class="scr bg-ink" data-tone="snow" aria-label="Locl">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s7">
+        <div class="s7 s7-inner">
           <span class="s5-ring s5-ring--2" aria-hidden="true"></span>
           <span class="s5-ring s5-ring--1" aria-hidden="true"></span>
           <div class="s7-top up">
@@ -2118,21 +2122,19 @@
         </div>
       </section>
 
-      <!-- 8 — Prozess -->
-      <section id="s8" class="scr bg-snow" data-tone="ink" aria-label="Prozess">
+      <!-- 8a — Prozess 1/2 -->
+      <section id="s8a" class="scr bg-snow" data-tone="ink" aria-label="Prozess erste Hälfte">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s8">
-          <span class="s8-deco" aria-hidden="true">04</span>
+        <div class="s8 s8-layout">
           <div class="s8-content">
             <div class="s8-overline up">
               <span class="s8-overline-line" aria-hidden="true"></span>
-              <span class="s8-overline-text">Wie wir arbeiten</span>
+              <span class="s8-overline-text">Wie wir arbeiten · 1/2</span>
             </div>
             <h2 class="s8-headline up">
-              Vier Phasen.<br />
-              Kein Ergebnis das<br />
-              niemand nutzt.
+              Erst verstehen.<br />
+              Dann konzipieren.
             </h2>
             <div class="s8-rows">
               <div class="s8-row up">
@@ -2157,6 +2159,26 @@
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8b — Prozess 2/2 -->
+      <section id="s8b" class="scr bg-ink" data-tone="snow" aria-label="Prozess zweite Hälfte">
+        <div class="tap tap-l" onclick="go(-1)"></div>
+        <div class="tap tap-r" onclick="go(1)"></div>
+        <div class="s8 s8--on-ink s8-layout">
+          <div class="s8-content">
+            <div class="s8-overline up">
+              <span class="s8-overline-line" aria-hidden="true"></span>
+              <span class="s8-overline-text">Wie wir arbeiten · 2/2</span>
+            </div>
+            <h2 class="s8-headline up">
+              Dann bauen.<br />
+              Und launchen.
+            </h2>
+            <div class="s8-rows">
               <div class="s8-row up">
                 <span class="s8-num">03</span>
                 <div class="s8-row-main">
@@ -2188,51 +2210,33 @@
       <section id="s9" class="scr bg-sand" data-tone="ink" aria-label="Für wen">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s9fw">
+        <div class="s9fw s9-layout">
           <span class="s9fw-deco" aria-hidden="true">FÜR</span>
-          <div class="s9fw-main">
-            <div class="s9fw-spacer" aria-hidden="true"></div>
-            <div class="s9fw-top">
-              <div class="s9fw-overline up">
-                <span class="s9fw-overline-line" aria-hidden="true"></span>
-                <span class="s9fw-overline-text">Für wen wir sind</span>
-              </div>
-              <h2 class="s9fw-headline up">
-                Wir sind das<br />
-                richtige Studio<br />
-                wenn du jemanden<br />
-                suchst der mitdenkt —<br />
-                nicht nur umsetzt.
-              </h2>
+          <div class="s9fw-inner">
+            <div class="s9fw-overline up">
+              <span class="s9fw-overline-line" aria-hidden="true"></span>
+              <span class="s9fw-overline-text">Für wen wir sind</span>
             </div>
-            <div class="s9fw-cols up">
-              <div class="s9fw-col">
-                <p class="s9fw-col-title">Für dich wenn:</p>
-                <ul class="s9fw-list">
-                  <li class="s9fw-item s9fw-item--yes">Du eine Idee hast die ein System braucht</li>
-                  <li class="s9fw-item s9fw-item--yes">Du schnell und vollständig willst</li>
-                  <li class="s9fw-item s9fw-item--yes">
-                    Du Strategie, Design und Code<br />
-                    in einer Hand willst
-                  </li>
-                  <li class="s9fw-item s9fw-item--yes">
-                    Du in einer beratungsintensiven<br />
-                    Branche arbeitest
-                  </li>
-                </ul>
-              </div>
-              <div class="s9fw-col">
-                <p class="s9fw-col-title">Nicht für dich wenn:</p>
-                <ul class="s9fw-list">
-                  <li class="s9fw-item s9fw-item--no">Du eine fertige Vorlage willst</li>
-                  <li class="s9fw-item s9fw-item--no">Du Hauptsache günstig suchst</li>
-                  <li class="s9fw-item s9fw-item--no">
-                    Du nur jemanden zum<br />
-                    Ausführen brauchst
-                  </li>
-                </ul>
-              </div>
+            <h2 class="s9fw-headline up">
+              Wir sind richtig<br />
+              für dich.
+            </h2>
+            <div class="s9fw-lines">
+              <p class="s9fw-line up">
+                Du hast eine Idee die ein System braucht.
+              </p>
+              <p class="s9fw-line up">
+                Du willst jemanden der mitdenkt —<br />
+                nicht nur ausführt.
+              </p>
+              <p class="s9fw-line up">
+                Du willst Strategie, Design und Code<br />
+                aus einer Hand.
+              </p>
             </div>
+            <p class="s9fw-foot up">
+              Nicht für dich: Wer eine Vorlage will. Wer nur ausführen lassen will. Wer Hauptsache günstig sucht.
+            </p>
           </div>
         </div>
       </section>
@@ -2241,7 +2245,7 @@
       <section id="s10" class="scr bg-fire" data-tone="fire" aria-label="Kontakt">
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
-        <div class="s9">
+        <div class="s9 s10-body">
           <span class="s9-deco" aria-hidden="true">A</span>
           <div class="s9-content">
             <p class="s9-overline up">Nächster Schritt</p>
@@ -2273,16 +2277,17 @@
 
   <script>
     (function () {
-      const SCREENS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10'];
+      const SCREENS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8a', 's8b', 's9', 's10'];
       const SCREEN_NAMES = {
         s1: 'Start',
         s2: 'Das Problem',
-        s3: 'Alef Studio',
+        s3: 'Video',
         s4: 'Unsere Denkweise',
         s5: 'Bärenwald',
         s6: 'FlowLeads',
         s7: 'Locl',
-        s8: 'Prozess',
+        s8a: 'Prozess 1/2',
+        s8b: 'Prozess 2/2',
         s9: 'Für wen',
         s10: 'Kontakt',
       };
@@ -2294,34 +2299,69 @@
       const icV = document.getElementById("ic-v");
       const icD = document.getElementById("ic-d");
       const dotsEl = document.getElementById("dots");
+      const s3Video = document.getElementById("s3-video");
+      if (s3Video) {
+        s3Video.loop = true;
+        s3Video.addEventListener("ended", function () {
+          this.currentTime = 0;
+          var p = this.play();
+          if (p && p.catch) p.catch(function () {});
+        });
+      }
 
-      const TONES = {
-        snow: { fill: "#f8f6f1", stroke: "#0c0c0a" },
-        ink: { fill: "#0c0c0a", stroke: "#f8f6f1" },
-        fire: { fill: "rgba(248,246,241,0.12)", stroke: "#f8f6f1" },
-      };
+      function playS3IfActive() {
+        if (!s3Video || SCREENS[cur] !== "s3") return;
+        var p = s3Video.play();
+        if (p && p.catch) p.catch(function () {});
+      }
 
       function paintIcon(tone) {
-        const t = TONES[tone] || TONES.snow;
-        if (icBg) icBg.setAttribute("fill", t.fill);
-        if (icV) icV.setAttribute("stroke", t.stroke);
-        if (icD) icD.setAttribute("stroke", t.stroke);
+        if (tone === "ink") {
+          if (icBg) icBg.setAttribute("fill", "#F8F6F1");
+          if (icV) icV.setAttribute("stroke", "#0C0C0A");
+          if (icD) icD.setAttribute("stroke", "#0C0C0A");
+        } else {
+          if (icBg) icBg.setAttribute("fill", "#0C0C0A");
+          if (icV) icV.setAttribute("stroke", "#F8F6F1");
+          if (icD) icD.setAttribute("stroke", "#F8F6F1");
+        }
       }
 
       function updateHeader(id) {
         const scr = document.getElementById(id);
         if (!hdr || !scr) return;
         const tone = scr.getAttribute("data-tone") || "snow";
-        hdr.setAttribute("data-tone", tone);
+        if (id === "s3") {
+          hdr.setAttribute("data-surface", "transparent");
+          hdr.setAttribute("data-tone", "snow");
+          hdr.style.background = "transparent";
+          hdr.style.borderColor = "transparent";
+        } else {
+          hdr.removeAttribute("data-surface");
+          hdr.style.background = "";
+          hdr.style.borderColor = "";
+          hdr.setAttribute("data-tone", tone);
+        }
         const logoTone = id === "s10" ? "snow" : tone;
         paintIcon(logoTone);
+        if (id === "s3") {
+          if (icBg) icBg.setAttribute("fill", "#0C0C0A");
+          if (icV) icV.setAttribute("stroke", "#F8F6F1");
+          if (icD) icD.setAttribute("stroke", "#F8F6F1");
+        }
       }
 
       function updateDots() {
         const scr = document.getElementById(SCREENS[cur]);
         const tone = scr ? scr.getAttribute("data-tone") || "snow" : "snow";
-        const off = tone === "ink" ? "rgba(12,12,10,0.18)" : "rgba(248,246,241,0.25)";
-        const onC = "#c4622d";
+        const sid = SCREENS[cur];
+        let off =
+          sid === "s3"
+            ? "rgba(248,246,241,0.2)"
+            : tone === "ink"
+              ? "rgba(12,12,10,0.18)"
+              : "rgba(248,246,241,0.25)";
+        const onC = sid === "s3" ? "#C4622D" : "#c4622d";
         dotsEl.querySelectorAll(".dot").forEach(function (d, i) {
           const active = i === cur;
           d.classList.toggle("on", active);
@@ -2331,9 +2371,10 @@
       }
 
       function goTo(next) {
-        const n = ((next % SCREENS.length) + SCREENS.length) % SCREENS.length;
-        if (busy || n === cur) return;
+        if (next < 0 || next >= SCREENS.length) return;
+        if (busy || next === cur) return;
         busy = true;
+        const n = next;
         const curEl = document.getElementById(SCREENS[cur]);
         const nxtEl = document.getElementById(SCREENS[n]);
         if (!curEl || !nxtEl) {
@@ -2350,6 +2391,7 @@
         cur = n;
         updateHeader(SCREENS[cur]);
         updateDots();
+        playS3IfActive();
 
         setTimeout(function () {
           curEl.classList.remove("leaving");
@@ -2362,6 +2404,7 @@
       }
 
       function go(dir) {
+        if (dir === 1 && cur === SCREENS.length - 1) return;
         goTo(cur + dir);
       }
 
@@ -2380,6 +2423,7 @@
       });
 
       document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown" && cur === SCREENS.length - 1) return;
         if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown") {
           e.preventDefault();
           go(1);
@@ -2397,6 +2441,7 @@
           var now = Date.now();
           if (now - lastWheel < 800) return;
           if (Math.abs(e.deltaY) < 40) return;
+          if (e.deltaY > 0 && cur === SCREENS.length - 1) return;
           e.preventDefault();
           lastWheel = now;
           go(e.deltaY > 0 ? 1 : -1);
@@ -2423,6 +2468,7 @@
           if (Date.now() - tt > 500) return;
           var dy = ty - e.changedTouches[0].clientY;
           if (Math.abs(dy) < 50) return;
+          if (dy > 0 && cur === SCREENS.length - 1) return;
           go(dy > 0 ? 1 : -1);
         },
         { passive: true }
@@ -2433,8 +2479,27 @@
         if (first) first.classList.remove("entering");
       });
 
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) playS3IfActive();
+      });
+
       updateHeader(SCREENS[0]);
       updateDots();
+
+      (function revealHdrWhenReady() {
+        function go() {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              document.documentElement.classList.add("hdr-ready");
+            });
+          });
+        }
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(go).catch(go);
+        } else {
+          go();
+        }
+      })();
     })();
   </script>
 </body>
