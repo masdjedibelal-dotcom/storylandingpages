@@ -290,6 +290,7 @@
     .s9-layout,
     .s10-body,
     #s5 > .s5-header,
+    #s5 > .s5-counter,
     #s5 > .s5-headline,
     #s5 > .s5-track-wrap,
     #s5 > .s5-nav {
@@ -825,7 +826,7 @@
       min-height: 0;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: flex-start;
       overflow-x: hidden;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
@@ -854,7 +855,7 @@
       z-index: 55;
       flex-shrink: 0;
       width: 100%;
-      padding: 0 var(--px) calc(var(--safe-b) + 24px);
+      padding: 0 var(--px) calc(var(--safe-b) + 80px);
     }
 
     .s4-overline {
@@ -940,10 +941,7 @@
     }
 
     .s5-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 var(--px);
+      padding: 0 calc(var(--px) + 36px) 0 var(--px);
       margin-bottom: 20px;
       flex-shrink: 0;
     }
@@ -958,6 +956,8 @@
       display: flex;
       align-items: center;
       gap: 14px;
+      max-width: 100%;
+      margin: 0;
     }
 
     .s5-overline-line {
@@ -968,17 +968,36 @@
       flex-shrink: 0;
     }
 
-    .s5-counter {
+    #s5 .s5-counter {
+      position: fixed;
+      top: calc(var(--hdr-stack) + 8px);
+      right: max(var(--px), env(safe-area-inset-right, 0px));
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      margin: 0;
       font-family: "DM Mono", monospace;
       font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.12em;
       color: rgba(248, 246, 241, 0.2);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    #s5:not(.on) .s5-counter {
+      visibility: hidden;
     }
 
     .s5-counter-sep {
-      margin: 0 6px;
+      margin: 0;
       color: rgba(248, 246, 241, 0.1);
+      font-size: 11px;
+      line-height: 1;
     }
 
     .s5-headline {
@@ -988,7 +1007,7 @@
       line-height: 0.95;
       letter-spacing: -0.04em;
       color: var(--snow);
-      padding: 0 var(--px);
+      padding: 0 calc(var(--px) + 36px) 0 var(--px);
       margin-bottom: 20px;
       flex-shrink: 0;
     }
@@ -1001,13 +1020,16 @@
 
     .s5-track-wrap {
       flex: 1;
-      overflow: hidden;
       min-height: 0;
+      overflow: hidden;
       position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
     .s5-track {
       display: flex;
+      align-items: stretch;
       height: 100%;
       transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
       will-change: transform;
@@ -1017,11 +1039,9 @@
       flex: 0 0 100%;
       min-width: 100%;
       width: 100%;
-      min-height: 0;
       height: 100%;
-      max-height: 100%;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       box-sizing: border-box;
     }
@@ -1082,13 +1102,13 @@
     }
 
     .s5-card-body {
-      padding: 0 24px 16px;
-      display: flex;
-      flex-direction: column;
+      flex: 1;
       min-height: 0;
-      overflow-x: hidden;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      padding: 0 24px 20px;
+      display: flex;
+      flex-direction: column;
     }
 
     .s5-card-title {
@@ -1171,6 +1191,7 @@
 
     .s5-card-result {
       margin-top: auto;
+      flex-shrink: 0;
       padding-top: 14px;
       border-top: 0.5px solid rgba(248, 246, 241, 0.07);
     }
@@ -1212,7 +1233,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px var(--px) 0;
+      padding: 16px calc(var(--px) + 36px) 0 var(--px);
       flex-shrink: 0;
     }
 
@@ -1301,6 +1322,8 @@
       padding: calc(var(--safe-t) + 100px) var(--px) calc(var(--safe-b) + 56px);
       position: relative;
       z-index: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .s8a-head {
@@ -1350,8 +1373,7 @@
       gap: 0;
       flex: 1;
       min-height: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      overflow: visible;
     }
 
     .s8a-phase {
@@ -1435,6 +1457,8 @@
       padding: calc(var(--safe-t) + 100px) var(--px) calc(var(--safe-b) + 56px);
       position: relative;
       z-index: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .s8b-head {
@@ -1484,8 +1508,7 @@
       gap: 0;
       flex: 1;
       min-height: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      overflow: visible;
     }
 
     .s8b-phase {
@@ -1546,6 +1569,7 @@
       line-height: 1.1;
       flex-shrink: 0;
       margin: 0;
+      padding-top: 16px;
     }
 
     @media (max-width: 768px) {
@@ -2021,15 +2045,16 @@
         <div class="tap tap-l" onclick="go(-1)"></div>
         <div class="tap tap-r" onclick="go(1)"></div>
 
+        <p class="s5-counter" aria-live="polite">
+          <span id="s5-cur">01</span>
+          <span class="s5-counter-sep" aria-hidden="true">/</span>
+          <span>03</span>
+        </p>
+
         <div class="s5-header">
           <p class="s5-overline">
             <span class="s5-overline-line" aria-hidden="true"></span>
             Ausgewählte Projekte
-          </p>
-          <p class="s5-counter">
-            <span id="s5-cur">01</span>
-            <span class="s5-counter-sep">/</span>
-            <span>03</span>
           </p>
         </div>
 
