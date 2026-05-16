@@ -1295,7 +1295,6 @@
     #s8a {
       padding: 0;
       overflow: hidden;
-      position: relative;
       min-height: 0;
     }
 
@@ -1433,7 +1432,6 @@
     #s8b {
       padding: 0;
       overflow: hidden;
-      position: relative;
       min-height: 0;
     }
 
@@ -2341,21 +2339,16 @@
       if (s3Video) {
         s3Video.loop = true;
         s3Video.muted = true;
+        /* Vorladen starten damit das Video beim ersten Besuch sofort bereit ist */
+        s3Video.load();
       }
 
       function playS3IfActive() {
         if (!s3Video || SCREENS[cur] !== "s3") return;
-        s3Video.currentTime = 0;
-        var tryPlay = function () {
-          s3Video.muted = true;
-          var p = s3Video.play();
-          if (p && p.catch) p.catch(function () {});
-        };
-        if (s3Video.readyState >= 2) {
-          tryPlay();
-        } else {
-          s3Video.addEventListener("canplay", tryPlay, { once: true });
-        }
+        /* Direkt play() — muss im User-Gesture-Callstack bleiben (iOS Safari) */
+        s3Video.muted = true;
+        var p = s3Video.play();
+        if (p && p.catch) p.catch(function () {});
       }
 
       var carIdx = 0;
