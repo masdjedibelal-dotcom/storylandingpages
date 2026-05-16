@@ -24,6 +24,11 @@
       /* Erste Inhaltszeile: klar unter dem Header (Bento / kein Überdecken) */
       --scr-pad-t: calc(var(--hdr-stack) + 16px);
       --dot-off: rgba(248, 246, 241, 0.25);
+      /* Fixe Progress-Dots: Abstand vom unteren Viewport-Rand + Punktreihe + Luft zum Fließtext */
+      --dots-from-bottom: 28px;
+      --dots-clearance: calc(
+        var(--dots-from-bottom) + 26px + 56px
+      );
     }
 
     @media (max-width: 768px) {
@@ -288,14 +293,18 @@
     .s8a-layout,
     .s8b-layout,
     .s9-layout,
-    .s10-body,
+    .s10-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* s5: über volle Breite Tap-Zonen (z-index 50), sonst kein Scroll in den Karten */
     #s5 > .s5-header,
-    #s5 > .s5-counter,
     #s5 > .s5-headline,
     #s5 > .s5-track-wrap,
     #s5 > .s5-nav {
       position: relative;
-      z-index: 1;
+      z-index: 55;
     }
 
     .s1-deco-num,
@@ -483,12 +492,18 @@
     /* ——— Progress dots ——— */
     .dots {
       position: fixed;
-      bottom: calc(28px + var(--safe-b));
+      bottom: calc(var(--dots-from-bottom) + var(--safe-b));
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       gap: 7px;
       z-index: 150;
+    }
+
+    /* Auf Projekte-Screen: eigene Karussell-Punkte — globale Screen-Dots ausblenden */
+    .dots.dots--s5-hidden {
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .dot {
@@ -633,19 +648,6 @@
       pointer-events: none;
       user-select: none;
       white-space: nowrap;
-    }
-
-    .s2-num {
-      position: absolute;
-      top: 12px;
-      right: var(--px);
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      color: rgba(12, 12, 10, 0.2);
-      pointer-events: none;
-      user-select: none;
     }
 
     .s2-content {
@@ -855,7 +857,7 @@
       z-index: 55;
       flex-shrink: 0;
       width: 100%;
-      padding: 0 var(--px) calc(var(--safe-b) + 80px);
+      padding: 0 var(--px) calc(var(--safe-b) + var(--dots-clearance));
     }
 
     .s4-overline {
@@ -1022,6 +1024,7 @@
       flex: 1;
       min-height: 0;
       overflow: hidden;
+      overflow-x: clip;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -1031,8 +1034,8 @@
       display: flex;
       align-items: stretch;
       height: 100%;
+      min-height: 0;
       transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: transform;
     }
 
     .s5-card {
@@ -1040,6 +1043,7 @@
       min-width: 100%;
       width: 100%;
       height: 100%;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -1105,8 +1109,10 @@
       flex: 1;
       min-height: 0;
       overflow-y: auto;
+      overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
-      padding: 0 24px 20px;
+      touch-action: pan-y;
+      padding: 0 24px calc(24px + env(safe-area-inset-bottom, 0px));
       display: flex;
       flex-direction: column;
     }
@@ -1235,6 +1241,7 @@
       align-items: center;
       padding: 16px calc(var(--px) + 36px) 0 var(--px);
       flex-shrink: 0;
+      gap: 12px;
     }
 
     .s5-btn {
@@ -1324,6 +1331,8 @@
       z-index: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      background-color: var(--cream);
     }
 
     .s8a-head {
@@ -1459,6 +1468,8 @@
       z-index: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      background-color: var(--ink);
     }
 
     .s8b-head {
@@ -1845,10 +1856,6 @@
     }
 
     @media (max-width: 768px) {
-      .s2-num {
-        top: 8px;
-      }
-
       .s2-content {
         padding-top: 8px;
       }
@@ -1951,7 +1958,6 @@
         <div class="tap tap-r" onclick="go(1)"></div>
         <div class="s2 s2-layout">
           <span class="s2-deco" aria-hidden="true">WARUM</span>
-          <span class="s2-num" aria-hidden="true">002</span>
           <div class="s2-content">
             <div class="s2-overline up">
               <span class="s2-overline-line" aria-hidden="true"></span>
@@ -2429,6 +2435,7 @@
 
       function carousel(dir) {
         carGoTo(carIdx + dir);
+        requestAnimationFrame(updateCarousel);
       }
       window.carousel = carousel;
 
@@ -2469,6 +2476,9 @@
       }
 
       function updateDots() {
+        if (dotsEl) {
+          dotsEl.classList.toggle("dots--s5-hidden", SCREENS[cur] === "s5");
+        }
         const scr = document.getElementById(SCREENS[cur]);
         const tone = scr ? scr.getAttribute("data-tone") || "snow" : "snow";
         const sid = SCREENS[cur];
@@ -2502,7 +2512,8 @@
 
         if (SCREENS[prev] === "s5" && n !== prev) {
           carIdx = 0;
-          updateCarousel();
+          /* Kein updateCarousel hier: sonst springt die Spur auf Karte 001 während #s5
+             noch sichtbar ist — „Kunden kommen mit…“ flackert über s8 / iOS-Compositor. */
         }
 
         curEl.classList.add("leaving");
@@ -2515,10 +2526,18 @@
         updateHeader(SCREENS[cur]);
         updateDots();
         playS3IfActive();
-        if (SCREENS[cur] === "s5") updateCarousel();
+        if (SCREENS[cur] === "s5") {
+          updateCarousel();
+          requestAnimationFrame(function () {
+            updateCarousel();
+            requestAnimationFrame(updateCarousel);
+          });
+        }
 
         setTimeout(function () {
           curEl.classList.remove("leaving");
+          var tr = document.getElementById("s5Track");
+          if (tr && SCREENS[prev] === "s5") tr.style.willChange = "auto";
         }, 400);
 
         setTimeout(function () {
