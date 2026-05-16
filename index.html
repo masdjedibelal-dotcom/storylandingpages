@@ -935,7 +935,7 @@
       flex: 1;
       min-height: 0;
       box-sizing: border-box;
-      padding: calc(var(--safe-t) + 72px) 0 calc(var(--safe-b) + 16px);
+      padding: calc(var(--safe-t) + 62px) 0 calc(var(--safe-b) + 8px);
       display: flex;
       flex-direction: column;
       gap: 0;
@@ -944,7 +944,7 @@
 
     .s5-header {
       padding: 0 calc(var(--px) + 36px) 0 var(--px);
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       flex-shrink: 0;
     }
 
@@ -1004,13 +1004,13 @@
 
     .s5-headline {
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(36px, 6vw, 64px);
+      font-size: clamp(28px, 5vw, 48px);
       font-weight: 700;
       line-height: 0.95;
       letter-spacing: -0.04em;
       color: var(--snow);
       padding: 0 calc(var(--px) + 36px) 0 var(--px);
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       flex-shrink: 0;
     }
 
@@ -1024,10 +1024,13 @@
       flex: 1;
       min-height: 0;
       overflow: hidden;
-      overflow-x: clip;
       position: relative;
       display: flex;
       flex-direction: column;
+      /* Eigene Stacking-Context — verhindert GPU-Layer-Bleed auf iOS */
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      isolation: isolate;
     }
 
     .s5-track {
@@ -1073,7 +1076,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 24px 12px;
+      padding: 12px 20px 8px;
       flex-shrink: 0;
     }
 
@@ -1108,22 +1111,20 @@
     .s5-card-body {
       flex: 1;
       min-height: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      touch-action: pan-y;
-      padding: 0 24px calc(24px + env(safe-area-inset-bottom, 0px));
+      overflow: hidden;
+      padding: 0 20px 16px;
       display: flex;
       flex-direction: column;
     }
 
     .s5-card-title {
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(22px, 4vw, 32px);
+      font-size: clamp(20px, 3.5vw, 28px);
       font-weight: 700;
-      line-height: 1;
+      line-height: 1.05;
       letter-spacing: -0.03em;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
     }
 
     .s5-card--dark .s5-card-title,
@@ -1150,30 +1151,24 @@
     }
 
     .s5-card-label {
-      font-family: "DM Mono", monospace;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--fire);
-      margin-bottom: 10px;
+      display: none;
     }
 
     .s5-card-list {
       list-style: none;
-      margin: 0;
+      margin: 0 0 12px;
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      margin-bottom: 16px;
+      gap: 4px;
+      flex-shrink: 0;
     }
 
     .s5-card-list li {
       font-family: "DM Sans", sans-serif;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 300;
-      line-height: 1.5;
+      line-height: 1.45;
       padding-left: 12px;
       position: relative;
     }
@@ -1198,7 +1193,7 @@
     .s5-card-result {
       margin-top: auto;
       flex-shrink: 0;
-      padding-top: 14px;
+      padding-top: 10px;
       border-top: 0.5px solid rgba(248, 246, 241, 0.07);
     }
 
@@ -1219,10 +1214,10 @@
 
     .s5-card-result-text {
       font-family: "Cormorant Garamond", serif;
-      font-size: clamp(14px, 2.5vw, 18px);
+      font-size: clamp(13px, 2.2vw, 16px);
       font-weight: 400;
       font-style: italic;
-      line-height: 1.5;
+      line-height: 1.4;
       margin: 0;
     }
 
@@ -1239,7 +1234,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px calc(var(--px) + 36px) 0 var(--px);
+      padding: 10px calc(var(--px) + 36px) 0 var(--px);
       flex-shrink: 0;
       gap: 12px;
     }
@@ -1991,6 +1986,7 @@
           muted
           loop
           playsinline
+          preload="auto"
           style="
             position: absolute;
             inset: 0;
@@ -2033,15 +2029,6 @@
               Wir starten mit<br />
               der Frage:
             </h2>
-            <span class="s4-accent up" aria-hidden="true"></span>
-            <blockquote class="s4-pull up">
-              Was soll dieses<br />
-              Produkt erreichen?
-            </blockquote>
-            <p class="s4-body up">
-              Erst wenn wir das verstehen<br />
-              fangen wir an zu bauen.
-            </p>
           </div>
         </div>
       </section>
@@ -2078,24 +2065,17 @@
               </div>
               <div class="s5-card-body">
                 <h3 class="s5-card-title">
-                  Ein komplettes<br />
-                  digitales System.<br />
-                  <em>In Wochen.</em>
+                  Ein komplettes digitales System. <em>In Wochen.</em>
                 </h3>
-                <p class="s5-card-label">Was wir gebaut haben</p>
                 <ul class="s5-card-list">
-                  <li>Positionierung &amp; Konzept</li>
                   <li>Website &amp; Landingpage</li>
                   <li>Interaktiver Preisrechner</li>
                   <li>Lead-System &amp; CRM</li>
-                  <li>Email-Automatisierung</li>
                 </ul>
                 <div class="s5-card-result">
                   <span class="s5-card-result-label">Ergebnis</span>
                   <p class="s5-card-result-text">
-                    Erstmals digitale Leads.<br />
-                    Kunden kommen mit<br />
-                    konkretem Bedarf an.
+                    Erstmals digitale Leads — Kunden kommen mit konkretem Bedarf.
                   </p>
                 </div>
               </div>
@@ -2108,24 +2088,17 @@
               </div>
               <div class="s5-card-body">
                 <h3 class="s5-card-title">
-                  Von der Idee zum<br />
-                  fertigen Produkt.<br />
-                  <em>Live in Wochen.</em>
+                  Von der Idee zum fertigen Produkt. <em>Live in Wochen.</em>
                 </h3>
-                <p class="s5-card-label">Was wir gebaut haben</p>
                 <ul class="s5-card-list">
-                  <li>Produktkonzept &amp; Design</li>
                   <li>8 interaktive Microsites</li>
                   <li>Web-App &amp; Backend</li>
                   <li>Zahlungssystem</li>
-                  <li>Landing Page &amp; Marketing</li>
                 </ul>
                 <div class="s5-card-result">
                   <span class="s5-card-result-label">Ergebnis</span>
                   <p class="s5-card-result-text">
-                    2–3× mehr Anfragen<br />
-                    50% weniger Zeit im Gespräch<br />
-                    Live · Zahlende Kunden
+                    2–3× mehr Anfragen · 50% weniger Gesprächszeit · Zahlende Kunden live.
                   </p>
                 </div>
               </div>
@@ -2138,23 +2111,17 @@
               </div>
               <div class="s5-card-body">
                 <h3 class="s5-card-title">
-                  Eine App-Idee.<br />
-                  Zwei Plattformen.<br />
-                  <em>Im Store.</em>
+                  Eine App-Idee. Zwei Plattformen. <em>Im Store.</em>
                 </h3>
-                <p class="s5-card-label">Was wir gebaut haben</p>
                 <ul class="s5-card-list">
-                  <li>App-Konzept &amp; UX Design</li>
                   <li>iOS &amp; Android App</li>
                   <li>Standortlogik &amp; Karte</li>
-                  <li>Kategorien &amp; Filterlogik</li>
                   <li>App Store Launch</li>
                 </ul>
                 <div class="s5-card-result">
                   <span class="s5-card-result-label">Ergebnis</span>
                   <p class="s5-card-result-text">
-                    Live im App Store<br />
-                    iOS &amp; Android
+                    Live im App Store — iOS &amp; Android.
                   </p>
                 </div>
               </div>
@@ -2373,17 +2340,22 @@
       const s3Video = document.getElementById("s3-video");
       if (s3Video) {
         s3Video.loop = true;
-        s3Video.addEventListener("ended", function () {
-          this.currentTime = 0;
-          var p = this.play();
-          if (p && p.catch) p.catch(function () {});
-        });
+        s3Video.muted = true;
       }
 
       function playS3IfActive() {
         if (!s3Video || SCREENS[cur] !== "s3") return;
-        var p = s3Video.play();
-        if (p && p.catch) p.catch(function () {});
+        s3Video.currentTime = 0;
+        var tryPlay = function () {
+          s3Video.muted = true;
+          var p = s3Video.play();
+          if (p && p.catch) p.catch(function () {});
+        };
+        if (s3Video.readyState >= 2) {
+          tryPlay();
+        } else {
+          s3Video.addEventListener("canplay", tryPlay, { once: true });
+        }
       }
 
       var carIdx = 0;
@@ -2527,7 +2499,9 @@
         updateDots();
         playS3IfActive();
         if (SCREENS[cur] === "s5") {
-          updateCarousel();
+          /* Transition reaktivieren falls nach Reset abgeschaltet */
+          var tr = document.getElementById("s5Track");
+          if (tr) tr.style.transition = "";
           requestAnimationFrame(function () {
             updateCarousel();
             requestAnimationFrame(updateCarousel);
@@ -2536,9 +2510,16 @@
 
         setTimeout(function () {
           curEl.classList.remove("leaving");
-          var tr = document.getElementById("s5Track");
-          if (tr && SCREENS[prev] === "s5") tr.style.willChange = "auto";
-        }, 400);
+          if (SCREENS[prev] === "s5") {
+            /* Nach vollständigem Ausblenden: Transform zurücksetzen + GPU-Layer freigeben */
+            var tr = document.getElementById("s5Track");
+            if (tr) {
+              tr.style.transition = "none";
+              tr.style.transform = "translateX(0)";
+            }
+            carIdx = 0;
+          }
+        }, 420);
 
         setTimeout(function () {
           nxtEl.classList.remove("entering");
